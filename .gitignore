@@ -36,3 +36,6 @@ output/pulse/pulse_runs.jsonl
 
 # Stripe live catalog dumps (contain account_id; safe but prefer not in public-ish clones)
 # data/stripe_catalog.json  # kept in repo for now — no secrets
+
+# Local backups (not committed)
+*.bak.csv

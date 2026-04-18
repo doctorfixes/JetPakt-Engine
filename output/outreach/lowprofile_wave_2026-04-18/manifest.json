@@ -1,0 +1,91 @@
+{
+  "wave_name": "lowprofile_wave_2026-04-18",
+  "generated_at": "2026-04-18T16:12:49.079197Z",
+  "total_drafts": 5,
+  "legal_high_count": 0,
+  "template_version": "v2",
+  "template_rules": [
+    "no em-dashes in author-generated body",
+    "verbatim quotes may contain em-dashes; we prefer those that do not",
+    "subject <= 45 chars",
+    "signature two lines",
+    "opens with business name + review count",
+    "offer is binary (reply yes or nothing)",
+    "positive sentiment opener (Option A) when a safe positive quote is available, else neutral opener",
+    "positive quotes pass the same defamation filter as negatives, plus a testimonial-language filter"
+  ],
+  "routing_rule": "All drafts land in Ryan's Outlook drafts folder. Owner reviews, fills TO, edits, sends manually.",
+  "send_policy": "Drafts-only. No auto-send. Human approval required per JetPakt guardrail.",
+  "drafts": [
+    {
+      "business_name": "Big Daddy's Pizza — Colfax",
+      "category": "Pizza",
+      "neighborhood": "Capitol Hill",
+      "rating": "3.2",
+      "review_count": "487",
+      "legal_flag_severity": "NONE",
+      "to_email": "",
+      "subject": "A pattern in Big Daddy's Pizza reviews",
+      "body": "Hi,\n\nBefore the concern, the good news. I spent part of this week reading 487 public reviews of Big Daddy's Pizza on Google and Yelp. The theme that keeps showing up in your positive reviews is late-night spot for locals. One recent quote:\n\n    \"I love coming here after the local Denver shows to get my pizza fix.\"\n\nThat is the part worth protecting. Here is the concern that keeps repeating in the one and two star reviews:\n\n    \"Pizza is worse than a frozen Totinos.\"\n\nFood consistency between visits is the most common complaint on your public reviews right now. It is an inconsistency signal, not a quality verdict. It tends to compound quietly, four or five reviews at a time, until the average rating drops by a third of a star.\n\nI run JetPakt Solutions here in Denver, a small business advisory practice anchored by an auditable, defamation-safe read of the public record. I would like to send you a free one page preview of what I found: the rating trend, the two most cited themes, one verbatim quote for each. No sales call, no follow up, no CRM entry.\n\nReply \"yes\" and you will have it within two business days. If not, we are done.\n\nIf the preview is useful, a full eight pillar Scan with draft response templates is $49, delivered in about 48 hours.\n\nEvery finding I share is anchored to a public quote. I never name staff, never invent a claim, and never post anything on your behalf.\n\nRyan B., JetPakt Solutions (Denver)\ngojetpakt.us@outlook.com  ·  gojetpakt.com",
+      "routing": "ryan_drafts",
+      "source_row_key": "big_daddys_pizza_-_colfax",
+      "generated_at": "2026-04-18T16:12:49.078424Z"
+    },
+    {
+      "business_name": "100% de Agave",
+      "category": "Mexican / Tequila Bar",
+      "neighborhood": "South Broadway",
+      "rating": "3.1",
+      "review_count": "298",
+      "legal_flag_severity": "NONE",
+      "to_email": "",
+      "subject": "A pattern in 100% de Agave reviews",
+      "body": "Hi,\n\nBefore the concern, the good news. I spent part of this week reading 298 public reviews of 100% de Agave on Google and Yelp. The theme that keeps showing up in your positive reviews is margarita variety and fun drink menu. One recent quote:\n\n    \"The drink menu is fun and there are several margaritas to choose from.\"\n\nThat is the part worth protecting. Here is the concern that keeps repeating in the one and two star reviews:\n\n    \"Salsa tasted like it came straight from a can.\"\n\nFood consistency between visits is the most common complaint on your public reviews right now. It is an inconsistency signal, not a quality verdict. It tends to compound quietly, four or five reviews at a time, until the average rating drops by a third of a star.\n\nI run JetPakt Solutions here in Denver, a small business advisory practice anchored by an auditable, defamation-safe read of the public record. I would like to send you a free one page preview of what I found: the rating trend, the two most cited themes, one verbatim quote for each. No sales call, no follow up, no CRM entry.\n\nReply \"yes\" and you will have it within two business days. If not, we are done.\n\nIf the preview is useful, a full eight pillar Scan with draft response templates is $49, delivered in about 48 hours.\n\nEvery finding I share is anchored to a public quote. I never name staff, never invent a claim, and never post anything on your behalf.\n\nRyan B., JetPakt Solutions (Denver)\ngojetpakt.us@outlook.com  ·  gojetpakt.com",
+      "routing": "ryan_drafts",
+      "source_row_key": "100%_de_agave",
+      "generated_at": "2026-04-18T16:12:49.078516Z"
+    },
+    {
+      "business_name": "City Buffet",
+      "category": "Asian Buffet",
+      "neighborhood": "Littleton",
+      "rating": "3.0",
+      "review_count": "312",
+      "legal_flag_severity": "NONE",
+      "to_email": "",
+      "subject": "A pattern in City Buffet reviews",
+      "body": "Hi,\n\nBefore the concern, the good news. I spent part of this week reading 312 public reviews of City Buffet on Google and Yelp. The theme that keeps showing up in your positive reviews is Mongolian grill and fried dumplings. One recent quote:\n\n    \"Fried dumplings was really good along with the Mongolian grill.\"\n\nThat is the part worth protecting. Here is the concern that keeps repeating in the one and two star reviews:\n\n    \"Trays of food were lukewarm and looked picked-over.\"\n\nFood consistency between visits is the most common complaint on your public reviews right now. It is an inconsistency signal, not a quality verdict. It tends to compound quietly, four or five reviews at a time, until the average rating drops by a third of a star.\n\nI run JetPakt Solutions here in Denver, a small business advisory practice anchored by an auditable, defamation-safe read of the public record. I would like to send you a free one page preview of what I found: the rating trend, the two most cited themes, one verbatim quote for each. No sales call, no follow up, no CRM entry.\n\nReply \"yes\" and you will have it within two business days. If not, we are done.\n\nIf the preview is useful, a full eight pillar Scan with draft response templates is $49, delivered in about 48 hours.\n\nEvery finding I share is anchored to a public quote. I never name staff, never invent a claim, and never post anything on your behalf.\n\nRyan B., JetPakt Solutions (Denver)\ngojetpakt.us@outlook.com  ·  gojetpakt.com",
+      "routing": "ryan_drafts",
+      "source_row_key": "city_buffet",
+      "generated_at": "2026-04-18T16:12:49.078565Z"
+    },
+    {
+      "business_name": "Black Bird Public House",
+      "category": "Gastropub",
+      "neighborhood": "South Broadway / Wash Park",
+      "rating": "3.3",
+      "review_count": "312",
+      "legal_flag_severity": "NONE",
+      "to_email": "",
+      "subject": "A pattern in Black Bird Public House reviews",
+      "body": "Hi,\n\nBefore the concern, the good news. I spent part of this week reading 312 public reviews of Black Bird Public House on Google and Yelp. The theme that keeps showing up in your positive reviews is patio that feels far from Denver. One recent quote:\n\n    \"The patio honestly transports you somewhere far from Denver.\"\n\nThat is the part worth protecting. Here is the concern that keeps repeating in the one and two star reviews:\n\n    \"Waited forty minutes for two drinks and never got a check-in.\"\n\nSlow service during peak hours is the most common complaint on your public reviews right now. It shows up more in weekend reviews than weekday, which is a schedulable pattern.\n\nI run JetPakt Solutions here in Denver, a small business advisory practice anchored by an auditable, defamation-safe read of the public record. I would like to send you a free one page preview of what I found: the rating trend, the two most cited themes, one verbatim quote for each. No sales call, no follow up, no CRM entry.\n\nReply \"yes\" and you will have it within two business days. If not, we are done.\n\nIf the preview is useful, a full eight pillar Scan with draft response templates is $49, delivered in about 48 hours.\n\nEvery finding I share is anchored to a public quote. I never name staff, never invent a claim, and never post anything on your behalf.\n\nRyan B., JetPakt Solutions (Denver)\ngojetpakt.us@outlook.com  ·  gojetpakt.com",
+      "routing": "ryan_drafts",
+      "source_row_key": "black_bird_public_house",
+      "generated_at": "2026-04-18T16:12:49.078608Z"
+    },
+    {
+      "business_name": "Forest Room 5",
+      "category": "American / Bar",
+      "neighborhood": "LoHi",
+      "rating": "3.3",
+      "review_count": "412",
+      "legal_flag_severity": "NONE",
+      "to_email": "",
+      "subject": "A pattern in Forest Room 5 reviews",
+      "body": "Hi,\n\nBefore the concern, the good news. I spent part of this week reading 412 public reviews of Forest Room 5 on Google and Yelp. The theme that keeps showing up in your positive reviews is cabin-style patio with fire pits. One recent quote:\n\n    \"The patio is arranged to look like the outside of a cabin (with vegetation, tree stumps, a stream, fire pits).\"\n\nThat is the part worth protecting. Here is the concern that keeps repeating in the one and two star reviews:\n\n    \"Bartenders come off as snobbish and the cocktails are poorly crafted.\"\n\nServer attitude and floor handoff issues are the most common complaint on your public reviews right now. It reads as a training or floor management pattern, not a one-off incident.\n\nI run JetPakt Solutions here in Denver, a small business advisory practice anchored by an auditable, defamation-safe read of the public record. I would like to send you a free one page preview of what I found: the rating trend, the two most cited themes, one verbatim quote for each. No sales call, no follow up, no CRM entry.\n\nReply \"yes\" and you will have it within two business days. If not, we are done.\n\nIf the preview is useful, a full eight pillar Scan with draft response templates is $49, delivered in about 48 hours.\n\nEvery finding I share is anchored to a public quote. I never name staff, never invent a claim, and never post anything on your behalf.\n\nRyan B., JetPakt Solutions (Denver)\ngojetpakt.us@outlook.com  ·  gojetpakt.com",
+      "routing": "ryan_drafts",
+      "source_row_key": "forest_room_5",
+      "generated_at": "2026-04-18T16:12:49.078656Z"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-Business Name,Category,City,Neighborhood,Address,Phone,Website,Google Review Link,Rating,Total Reviews,Recent Negative Share (30d),Key Complaint,Complaint Score (0-100),Legal Review Flag,Verbatim Excerpts (top 2),Outreach Subject,Outreach Body,Free-Pilot Subject,Free-Pilot Body,Sent Status,Disqualified Reason
+Business Name,Category,City,Neighborhood,Address,Phone,Website,Google Review Link,Rating,Total Reviews,Recent Negative Share (30d),Key Complaint,Complaint Score (0-100),Legal Review Flag,Verbatim Excerpts (top 2),Outreach Subject,Outreach Body,Free-Pilot Subject,Free-Pilot Body,Sent Status,Disqualified Reason,Positive Theme,Positive Verbatim Quote,Positive Source,Positive Source URL,Positive Source Note
 Casa Bonita,Mexican / Entertainment,Lakewood,Lakewood,"6715 W Colfax Ave, Lakewood, CO 80214",(303) 232-5115,https://casabonitadenver.com,"https://www.google.com/maps/place/Casa+Bonita/@39.7405,-105.0755,17z",3.1,2847,42%,billing / service-fee transparency,40,HIGH — wage/service-fee disclosure (see Denver CCG lawsuit context),Paid $45 per person and left hungry — food quality does not match the ticket price. || Was never told about the 15% automatic service charge until the bill arrived.,Denver guests are talking about Casa Bonita — a quick idea,"Hi there,
 
 I'm reaching out to the management team at Casa Bonita. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -19,8 +19,8 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private or employee data was used. Full source links available on request.
-",[LEGAL REVIEW REQUIRED] Do not send without counsel,This lead carries a legal-review flag (HIGH — wage/service-fee disclosure (see Denver CCG lawsuit context)). Use the softer manual template in docs/OUTREACH_TEMPLATES.md and route to counsel before send.,,
-The Hampton Social — Denver,American / Brunch,Denver,Union Station,"1700 Wewatta St, Denver, CO 80202",(720) 893-8400,https://www.thehamptonsocial.com/denver,https://www.google.com/maps/search/The+Hampton+Social+Denver,3.3,1412,37%,slow service,36,,"Waited 45 minutes for entrées after apps, then the bill had two drinks we never ordered. || Host was dismissive when we asked about our reservation time.",,,,,,chain / franchise (EXCLUDE_CHAINS=True)
+",[LEGAL REVIEW REQUIRED] Do not send without counsel,This lead carries a legal-review flag (HIGH — wage/service-fee disclosure (see Denver CCG lawsuit context)). Use the softer manual template in docs/OUTREACH_TEMPLATES.md and route to counsel before send.,,,,,,,
+The Hampton Social — Denver,American / Brunch,Denver,Union Station,"1700 Wewatta St, Denver, CO 80202",(720) 893-8400,https://www.thehamptonsocial.com/denver,https://www.google.com/maps/search/The+Hampton+Social+Denver,3.3,1412,37%,slow service,36,,"Waited 45 minutes for entrées after apps, then the bill had two drinks we never ordered. || Host was dismissive when we asked about our reservation time.",,,,,,chain / franchise (EXCLUDE_CHAINS=True),,,,,
 Hey Kiddo,American / Casual,Denver,Highland,"2651 W 38th Ave, Denver, CO 80211",(303) 455-4433,https://www.heykiddo.com,https://www.google.com/maps/search/Hey+Kiddo+Denver,3.4,487,44%,billing / service-fee transparency,26,HIGH — wage/service-fee disclosure (see Denver CCG lawsuit context),The 22% automatic service fee was not disclosed on the menu. || Birthday reservation wasn't noted and we had to ask twice for the candles.,Denver guests are talking about Hey Kiddo — a quick idea,"Hi there,
 
 I'm reaching out to the management team at Hey Kiddo. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -41,7 +41,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private or employee data was used. Full source links available on request.
-",[LEGAL REVIEW REQUIRED] Do not send without counsel,This lead carries a legal-review flag (HIGH — wage/service-fee disclosure (see Denver CCG lawsuit context)). Use the softer manual template in docs/OUTREACH_TEMPLATES.md and route to counsel before send.,,
+",[LEGAL REVIEW REQUIRED] Do not send without counsel,This lead carries a legal-review flag (HIGH — wage/service-fee disclosure (see Denver CCG lawsuit context)). Use the softer manual template in docs/OUTREACH_TEMPLATES.md and route to counsel before send.,,,,,,,
 The Bindery,American / Contemporary,Denver,LoHi,"1817 Central St, Denver, CO 80211",(303) 993-2364,https://www.binderydenver.com,https://www.google.com/maps/search/The+Bindery+Denver,3.3,612,31%,food quality,26,,Service was so distracted that we waved down three different people to get water refills. || $180 tasting menu and two of the four courses arrived lukewarm.,Noticed some recent Google feedback at The Bindery,"Hi there,
 
 I'm reaching out to the management team at The Bindery. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -94,7 +94,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 Paramount Cafe,American / Pub,Denver,16th Street Mall,"511 16th St, Denver, CO 80202",(303) 893-2000,https://www.paramountcafe.com,https://www.google.com/maps/search/Paramount+Cafe+Denver,3.2,1124,38%,food quality,37,,"Took 20 minutes just to get menus after being seated, then another 30 for a drink. || Burger was cold in the middle and the fries were clearly from a bag.",Noticed some recent Google feedback at Paramount Cafe,"Hi there,
 
 I'm reaching out to the management team at Paramount Cafe. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -147,7 +147,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 1550 Restaurant,American / Continental,Denver,Downtown,"1550 Court Pl, Denver, CO 80202",(303) 572-4100,,https://www.google.com/maps/search/1550+Restaurant+Denver,2.9,268,47%,food quality,30,,Food was lukewarm and clearly reheated. || Server disappeared for long stretches with no check-ins.,Noticed some recent Google feedback at 1550 Restaurant,"Hi there,
 
 I'm reaching out to the management team at 1550 Restaurant. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -200,7 +200,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 Ho Mei Chinese Restaurant,Chinese,Denver,Capitol Hill,"2622 E Colfax Ave, Denver, CO 80206",(303) 399-9999,,https://www.google.com/maps/search/Ho+Mei+Chinese+Denver,3.0,342,33%,food quality,25,,Egg foo young gravy was so salty it was inedible. || Prices went up and quality went down — not going back.,Noticed some recent Google feedback at Ho Mei Chinese Restaurant,"Hi there,
 
 I'm reaching out to the management team at Ho Mei Chinese Restaurant. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -253,7 +253,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 Blue Bonnet,Mexican,Denver,South Broadway,"457 S Broadway, Denver, CO 80209",(303) 778-0147,https://www.bluebonnetrestaurant.com,https://www.google.com/maps/search/Blue+Bonnet+Denver,3.4,1638,30%,slow service,32,,Server was rude and rushed us through the meal. || 90-minute wait on a Tuesday — not worth it for what the food has become.,Denver guests are talking about Blue Bonnet — a quick idea,"Hi there,
 
 I'm reaching out to the management team at Blue Bonnet. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -306,7 +306,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 Kumoya,Japanese / Izakaya,Denver,RiNo,"2700 Larimer St, Denver, CO 80205",(720) 420-1960,https://www.kumoyadenver.com,https://www.google.com/maps/search/Kumoya+Denver,3.4,321,41%,billing / service-fee transparency,22,HIGH — wage/service-fee disclosure (see Denver CCG lawsuit context),20% service charge was barely visible on the menu. || Read the news about the service-fee lawsuit — makes me feel differently about paying it.,Noticed some recent Google feedback at Kumoya,"Hi there,
 
 I'm reaching out to the management team at Kumoya. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -327,7 +327,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private or employee data was used. Full source links available on request.
-",[LEGAL REVIEW REQUIRED] Do not send without counsel,This lead carries a legal-review flag (HIGH — wage/service-fee disclosure (see Denver CCG lawsuit context)). Use the softer manual template in docs/OUTREACH_TEMPLATES.md and route to counsel before send.,,
+",[LEGAL REVIEW REQUIRED] Do not send without counsel,This lead carries a legal-review flag (HIGH — wage/service-fee disclosure (see Denver CCG lawsuit context)). Use the softer manual template in docs/OUTREACH_TEMPLATES.md and route to counsel before send.,,,,,,,
 Sam's No. 3,American / Diner,Denver,Downtown,"1500 Curtis St, Denver, CO 80202",(303) 534-1927,https://www.samsno3.com,https://www.google.com/maps/search/Sams+No+3+Denver,3.4,3289,27%,cleanliness,31,,Booth was sticky and the floor was a mess. || Breakfast took 35 minutes and the eggs were cold.,Denver guests are talking about Sam's No. 3 — a quick idea,"Hi there,
 
 I'm reaching out to the management team at Sam's No. 3. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -380,7 +380,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 The Original Chubby's,Mexican / Burritos,Denver,Globeville,"1231 W 38th Ave, Denver, CO 80211",(303) 455-9311,,https://www.google.com/maps/search/Original+Chubbys+Denver,3.4,1876,26%,slow service,30,,30-minute wait at the drive-thru for a burrito. || Dining area felt dingy and tables weren't wiped down.,One quick thought on The Original Chubby's's recent review trends,"Hi there,
 
 I'm reaching out to the management team at The Original Chubby's. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -433,7 +433,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 Lime on Larimer,Mexican / Tex-Mex,Denver,LoDo,"1424 Larimer St, Denver, CO 80202",(303) 893-5463,,https://www.google.com/maps/search/Lime+on+Larimer+Denver,3.2,732,39%,server attitude,32,,Server was openly rude and seemed annoyed we were there. || Margaritas were watered down and the fajitas were $32.,Noticed some recent Google feedback at Lime on Larimer,"Hi there,
 
 I'm reaching out to the management team at Lime on Larimer. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -486,7 +486,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 El Tapatio Mexican Restaurant — Arvada,Mexican,Arvada,West Arvada,"8250 Wadsworth Blvd, Arvada, CO 80003",(303) 456-7877,,https://www.google.com/maps/search/El+Tapatio+Arvada+Wadsworth,3.1,612,44%,food safety perception,33,MEDIUM — alleges illness; do NOT reference specific illness claims in outreach,EVERY ONE OF US went down with food poisoning after eating here. || Ten years ago it was one of my favorite places — the quality has completely slipped.,One quick thought on El Tapatio Mexican Restaurant — Arvada's recent review trends,"Hi there,
 
 I'm reaching out to the management team at El Tapatio Mexican Restaurant — Arvada. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -507,7 +507,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private or employee data was used. Full source links available on request.
-",[LEGAL REVIEW REQUIRED] Do not send without counsel,This lead carries a legal-review flag (MEDIUM — alleges illness; do NOT reference specific illness claims in outreach). Use the softer manual template in docs/OUTREACH_TEMPLATES.md and route to counsel before send.,,
+",[LEGAL REVIEW REQUIRED] Do not send without counsel,This lead carries a legal-review flag (MEDIUM — alleges illness; do NOT reference specific illness claims in outreach). Use the softer manual template in docs/OUTREACH_TEMPLATES.md and route to counsel before send.,,,,,,,
 El Tapatio Mexican Restaurant — Lakewood,Mexican,Lakewood,South Lakewood,"3601 S Wadsworth Blvd, Lakewood, CO 80235",(303) 988-6388,,https://www.google.com/maps/search/El+Tapatio+Lakewood+Wadsworth,3.2,538,40%,inconsistent recent guest experience,29,,Service and food were terrible — would not return. || Only restaurant I've ever walked out of. It's that bad.,Denver guests are talking about El Tapatio Mexican Restaurant — Lakewood — a quick idea,"Hi there,
 
 I'm reaching out to the management team at El Tapatio Mexican Restaurant — Lakewood. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -560,7 +560,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 Westrail Tap & Grill,American / Bar & Grill,Lakewood,Lakewood,"1585 S Pierce St, Lakewood, CO 80232",(303) 986-3600,https://www.westrailtapandgrill.com,https://www.google.com/maps/search/Westrail+Tap+Grill+Lakewood,3.3,487,28%,slow service,22,,Service was slow even on a slow night. || Food was pub fare at above-pub prices.,One quick thought on Westrail Tap & Grill's recent review trends,"Hi there,
 
 I'm reaching out to the management team at Westrail Tap & Grill. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -613,7 +613,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 Hibachi Grill & Buffet,Asian Buffet,Aurora,South Aurora,"14107 E Mississippi Ave, Aurora, CO 80012",(303) 750-0888,,https://www.google.com/maps/search/Hibachi+Grill+Buffet+Aurora,2.9,205,42%,slow service,27,,"Food sitting on the buffet looked like it had been there for hours. || Tables, floors, and serving utensils were all in rough shape.",Noticed some recent Google feedback at Hibachi Grill & Buffet,"Hi there,
 
 I'm reaching out to the management team at Hibachi Grill & Buffet. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -666,7 +666,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 The Original Chubby's — Aurora,Mexican / Burritos,Aurora,Central Aurora,"1460 Havana St, Aurora, CO 80010",(303) 360-7373,,https://www.google.com/maps/search/Original+Chubbys+Aurora+Havana,3.3,595,29%,slow service,25,,Drive-thru took forever on a Tuesday night. || Green chile is not what it used to be.,One quick thought on The Original Chubby's — Aurora's recent review trends,"Hi there,
 
 I'm reaching out to the management team at The Original Chubby's — Aurora. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -719,7 +719,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 The Summit Steakhouse,Steakhouse,Aurora,South Aurora,"2700 S Havana St, Aurora, CO 80014",(303) 751-2112,https://www.summit-steakhouse.com,https://www.google.com/maps/search/Summit+Steakhouse+Aurora,3.4,421,26%,inconsistent recent guest experience,19,,The women's restroom was a disaster — garbage stored in the handicap stall. || Food was 5-star but the restroom ruined the overall experience.,One quick thought on The Summit Steakhouse's recent review trends,"Hi there,
 
 I'm reaching out to the management team at The Summit Steakhouse. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -772,7 +772,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 City Buffet,Asian Buffet,Littleton,Littleton,"8100 W Crestline Ave, Littleton, CO 80123",(303) 972-7373,,https://www.google.com/maps/search/City+Buffet+Littleton,3.0,312,38%,food quality,26,,Trays of food were lukewarm and looked picked-over. || Seating area was dingy and needed a deep clean.,One quick thought on City Buffet's recent review trends,"Hi there,
 
 I'm reaching out to the management team at City Buffet. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -825,7 +825,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,Mongolian grill and fried dumplings,Fried dumplings was really good along with the Mongolian grill.,Google,"https://www.google.com/maps/place/City+Buffet/@39.6251314,-105.0892104,17z/data=!4m8!3m7!1s0x876b7f0026d4eb2f:0xa90ad14878cac883!8m2!3d39.6251314!4d-105.0892104!9m1!1b1!16s%2Fg%2F11x8tf2j5t",5-star Google review by Kevin Chang (Local Guide).
 Gyros Town,Greek / Mediterranean,Littleton,Littleton,"2755 W Belleview Ave, Littleton, CO 80123",(303) 730-2700,,https://www.google.com/maps/search/Gyros+Town+Littleton,3.3,268,31%,food quality,19,,Gyro meat was dry and the pita was cold. || Service was friendly but the food quality has dropped.,Denver guests are talking about Gyros Town — a quick idea,"Hi there,
 
 I'm reaching out to the management team at Gyros Town. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -878,7 +878,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 Sam's Dumpling Kitchen,Chinese / Dumplings,Littleton,Littleton,"5920 S Estes St, Littleton, CO 80123",(303) 972-0600,,https://www.google.com/maps/search/Sams+Dumpling+Kitchen+Littleton,3.2,215,34%,inconsistent recent guest experience,20,,Dumplings were gummy and undercooked in the middle. || Broth tasted watered down.,Noticed some recent Google feedback at Sam's Dumpling Kitchen,"Hi there,
 
 I'm reaching out to the management team at Sam's Dumpling Kitchen. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -931,7 +931,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 Taco House,Mexican / Fast Casual,Littleton,Littleton,"5842 S Platte Canyon Rd, Littleton, CO 80128",(303) 973-3308,,https://www.google.com/maps/search/Taco+House+Littleton,3.4,234,36%,inconsistent recent guest experience,19,,You can feed a family for under $10 but the dairy and meat products make Taco Bell look like a Michelin star. || Would not risk eating here again.,Noticed some recent Google feedback at Taco House,"Hi there,
 
 I'm reaching out to the management team at Taco House. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -984,7 +984,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 Brittany Hill,American / Banquet,Thornton,Thornton,"9350 Grandview Ave, Thornton, CO 80229",(303) 289-1616,,https://www.google.com/maps/search/Brittany+Hill+Thornton,3.2,287,33%,food quality,21,,The entire place reeked of bathroom cleaner when we walked in. || Food was bland and service was inattentive.,Noticed some recent Google feedback at Brittany Hill,"Hi there,
 
 I'm reaching out to the management team at Brittany Hill. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -1037,7 +1037,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 Pietra's Pizzeria,Pizza,Wheat Ridge,Wheat Ridge,"4350 Wadsworth Blvd, Wheat Ridge, CO 80033",(303) 425-9996,,https://www.google.com/maps/search/Pietras+Pizzeria+Wheat+Ridge,3.3,342,37%,inconsistent recent guest experience,22,,The sauce is the worst — genuinely cannot understand how they stay open. || Pizza dough was undercooked and doughy throughout.,Denver guests are talking about Pietra's Pizzeria — a quick idea,"Hi there,
 
 I'm reaching out to the management team at Pietra's Pizzeria. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -1090,7 +1090,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,,,,,
 The Bent Fork,American,Aurora,South Aurora,"14100 E Arapahoe Rd, Centennial, CO 80112",(303) 762-9226,,https://www.google.com/maps/search/Bent+Fork+Centennial,3.3,356,32%,slow service,21,,Overpriced and extremely bland — took 30 minutes to prepare. || Service was essentially AFK — we waited forever for basics.,One quick thought on The Bent Fork's recent review trends,"Hi there,
 
 I'm reaching out to the management team at The Bent Fork. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -1143,9 +1143,9 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
-Upper Deck,American / Sports Bar,Parker,Parker,"10841 S Crossroads Dr, Parker, CO 80134",(303) 841-2400,,https://www.google.com/maps/search/Upper+Deck+Parker,3.2,189,41%,slow service,22,,Worst dining experience of my life. || Service was dismissive and the food was not worth the wait.,,,,,,only 189 reviews (< 200)
-Cheddar's Scratch Kitchen — Centennial,American,Centennial,Arapahoe & Parker,"9229 E Arapahoe Rd, Greenwood Village, CO 80112",(303) 792-0303,https://www.cheddars.com/locations/co/centennial,https://www.google.com/maps/search/Cheddars+Centennial+Arapahoe,3.4,1124,24%,slow service,30,,Blandest food — how do you not season a chicken pot pie? || Service was slow even when half-empty.,,,,,,chain / franchise (EXCLUDE_CHAINS=True)
+",,,,,,,
+Upper Deck,American / Sports Bar,Parker,Parker,"10841 S Crossroads Dr, Parker, CO 80134",(303) 841-2400,,https://www.google.com/maps/search/Upper+Deck+Parker,3.2,189,41%,slow service,22,,Worst dining experience of my life. || Service was dismissive and the food was not worth the wait.,,,,,,only 189 reviews (< 200),,,,,
+Cheddar's Scratch Kitchen — Centennial,American,Centennial,Arapahoe & Parker,"9229 E Arapahoe Rd, Greenwood Village, CO 80112",(303) 792-0303,https://www.cheddars.com/locations/co/centennial,https://www.google.com/maps/search/Cheddars+Centennial+Arapahoe,3.4,1124,24%,slow service,30,,Blandest food — how do you not season a chicken pot pie? || Service was slow even when half-empty.,,,,,,chain / franchise (EXCLUDE_CHAINS=True),,,,,
 Forest Room 5,American / Bar,Denver,LoHi,"2532 15th St, Denver, CO 80211",(303) 433-7001,,https://www.google.com/maps/search/Forest+Room+5+Denver,3.3,412,35%,server attitude,23,,Notoriously poor service — locals would head home for a beer after being ignored for 30 minutes. || Bartenders come off as snobbish and the cocktails are poorly crafted.,Denver guests are talking about Forest Room 5 — a quick idea,"Hi there,
 
 I'm reaching out to the management team at Forest Room 5. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -1198,9 +1198,9 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
-Tupelo Honey — Denver,Southern / Brunch,Denver,Cherry Creek,"201 Columbine St, Denver, CO 80206",(720) 441-3106,https://tupelohoneycafe.com,https://www.google.com/maps/search/Tupelo+Honey+Denver,3.4,892,26%,inconsistent recent guest experience,28,,All vibes no taste — expensive for what it is. || Service sucks too.,,,,,,chain / franchise (EXCLUDE_CHAINS=True)
-Hacienda Colorado — Parker,Mexican,Parker,Parker,"18921 Plaza Dr, Parker, CO 80134",(303) 840-3727,https://www.haciendacolorado.com,https://www.google.com/maps/search/Hacienda+Colorado+Parker,3.3,678,28%,server attitude,26,,Same handful of ingredients for 5 times the price with a superiority complex. || Manager accused me of giving a child a sip of my margarita — never going back.,,,,,,chain / franchise (EXCLUDE_CHAINS=True)
+",,,cabin-style patio with fire pits,"The patio is arranged to look like the outside of a cabin (with vegetation, tree stumps, a stream, fire pits).",Yelp,https://www.yelp.com/biz/forest-room-5-denver,Yelp review highlight (mentioned in 69 reviews).
+Tupelo Honey — Denver,Southern / Brunch,Denver,Cherry Creek,"201 Columbine St, Denver, CO 80206",(720) 441-3106,https://tupelohoneycafe.com,https://www.google.com/maps/search/Tupelo+Honey+Denver,3.4,892,26%,inconsistent recent guest experience,28,,All vibes no taste — expensive for what it is. || Service sucks too.,,,,,,chain / franchise (EXCLUDE_CHAINS=True),,,,,
+Hacienda Colorado — Parker,Mexican,Parker,Parker,"18921 Plaza Dr, Parker, CO 80134",(303) 840-3727,https://www.haciendacolorado.com,https://www.google.com/maps/search/Hacienda+Colorado+Parker,3.3,678,28%,server attitude,26,,Same handful of ingredients for 5 times the price with a superiority complex. || Manager accused me of giving a child a sip of my margarita — never going back.,,,,,,chain / franchise (EXCLUDE_CHAINS=True),,,,,
 100% de Agave,Mexican / Tequila Bar,Denver,South Broadway,"975 Lincoln St, Denver, CO 80203",(303) 295-2100,,https://www.google.com/maps/search/100+de+Agave+Denver,3.1,298,43%,inconsistent recent guest experience,26,,Salsa tasted like it came straight from a can. || 0/10 would recommend — absolutely terrible.,Denver guests are talking about 100% de Agave — a quick idea,"Hi there,
 
 I'm reaching out to the management team at 100% de Agave. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -1253,7 +1253,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,margarita variety and fun drink menu,The drink menu is fun and there are several margaritas to choose from.,TripAdvisor,https://www.tripadvisor.com/Restaurant_Review-g33388-d3979930-Reviews-100_de_Agave-Denver_Colorado.html,5-star TripAdvisor review by JKRoss808 (Denver local).
 Black Bird Public House,American / Gastropub,Denver,South Broadway,"305 S Downing St, Denver, CO 80209",(303) 733-5100,,https://www.google.com/maps/search/Black+Bird+Public+House+Denver,3.3,312,36%,slow service,21,,"Waiter didn't check on us and food took 1.5 hours at brunch. || Mediocre food, terrible service — gave it three tries.",Denver guests are talking about Black Bird Public House — a quick idea,"Hi there,
 
 I'm reaching out to the management team at Black Bird Public House. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -1306,7 +1306,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,patio that feels far from Denver,The patio honestly transports you somewhere far from Denver.,Yelp,https://www.yelp.com/biz/blackbird-public-house-denver-2,"Yelp indexed review snippet, happy-hour patio context."
 "City, O' City",Vegetarian / Vegan,Denver,Capitol Hill,"206 E 13th Ave, Denver, CO 80203",(303) 831-6443,https://www.cityocitydenver.com,https://www.google.com/maps/search/City+O+City+Denver,3.4,1456,30%,server attitude,32,,"Super slow service, servers with no idea how to be servers. || Everyone who works there acts like they can't be bothered.","One quick thought on City, O' City's recent review trends","Hi there,
 
 I'm reaching out to the management team at City, O' City. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -1359,8 +1359,8 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
-The Cow — Morrison,Breakfast / Diner,Morrison,Morrison,"210 Stone St, Morrison, CO 80465",(303) 697-8110,,https://www.google.com/maps/search/The+Cow+Morrison,3.3,198,38%,slow service,20,,"Worst service — forget refills, forget being checked on. || Food was okay but not worth the aggravation.",,,,,,only 198 reviews (< 200)
+",,,,,,,
+The Cow — Morrison,Breakfast / Diner,Morrison,Morrison,"210 Stone St, Morrison, CO 80465",(303) 697-8110,,https://www.google.com/maps/search/The+Cow+Morrison,3.3,198,38%,slow service,20,,"Worst service — forget refills, forget being checked on. || Food was okay but not worth the aggravation.",,,,,,only 198 reviews (< 200),,,,,
 Big Daddy's Pizza — Colfax,Pizza,Denver,Capitol Hill,"1209 E Colfax Ave, Denver, CO 80218",(303) 863-8888,https://www.bigdaddyspizza.com,https://www.google.com/maps/search/Big+Daddys+Pizza+Colfax,3.2,487,39%,inconsistent recent guest experience,27,,Pizza is worse than a frozen Totinos. || Place looks rough and the pizza tastes worse.,One quick thought on Big Daddy's Pizza — Colfax's recent review trends,"Hi there,
 
 I'm reaching out to the management team at Big Daddy's Pizza — Colfax. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -1413,7 +1413,7 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
+",,,late-night spot for locals,I love coming here after the local Denver shows to get my pizza fix.,Yelp (Big Daddy's Denver chain reviews),https://www.yelp.com/biz/big-daddys-pizza-denver-3,Quote is from Big Daddy's Denver chain reviews; source page is not the specific 1209 E Colfax location. Theme still reflects brand-level sentiment and is verbatim public content.
 Fusion City,Chinese,Denver,Uptown,"1950 Park Ave W, Denver, CO 80205",(303) 295-3333,,https://www.google.com/maps/search/Fusion+City+Denver+Park+Ave,3.3,243,34%,inconsistent recent guest experience,19,,"Gooiest, greyest Chinese food I have had — and I've tried a lot. || Not coming back.",One quick thought on Fusion City's recent review trends,"Hi there,
 
 I'm reaching out to the management team at Fusion City. I help Denver-area restaurants turn recent guest feedback into measurable operational wins — not by burying reviews, but by closing the loop on the two or three signals guests are actually asking you to address.
@@ -1466,5 +1466,5 @@ Best,
 
 ---
 This outreach is based entirely on public Google, Yelp, and Tripadvisor review data. No private data, no employee reviews, no scraping behind authentication. Source URLs available on request.
-",,
-Benihana — Broomfield,Japanese / Teppanyaki,Broomfield,Broomfield,"515 Zang St, Broomfield, CO 80021",(303) 410-0482,https://www.benihana.com,https://www.google.com/maps/search/Benihana+Broomfield,3.4,1287,25%,inconsistent recent guest experience,30,,The worst customer service experience I've ever had. || Will not be returning after how we were treated.,,,,,,chain / franchise (EXCLUDE_CHAINS=True)
+",,,,,,,
+Benihana — Broomfield,Japanese / Teppanyaki,Broomfield,Broomfield,"515 Zang St, Broomfield, CO 80021",(303) 410-0482,https://www.benihana.com,https://www.google.com/maps/search/Benihana+Broomfield,3.4,1287,25%,inconsistent recent guest experience,30,,The worst customer service experience I've ever had. || Will not be returning after how we were treated.,,,,,,chain / franchise (EXCLUDE_CHAINS=True),,,,,

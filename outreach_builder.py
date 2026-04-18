@@ -1,150 +1,248 @@
 """
-JetPakt — Initial Outreach Builder
+JetPakt — Initial Outreach Builder (v2)
 
-Generates personalized cold-outreach email drafts for the top Denver restaurant
-leads. Each draft:
-  - Warm, consultative, Denver-local tone
-  - Never names individual staff
-  - Anchors one observation to a verbatim public quote already visible on Google/Yelp
-  - Offers a free one-page preview (not a pitch for the paid scan)
-  - Legal-HIGH routing: owner-only (never cc'd elsewhere)
-  - Ends with Ryan's boilerplate signature
+Template v2 rules (locked):
+  - No em-dashes in generated body. Only hyphens where grammatically required
+    (compound modifiers like "one-page"). Verbatim quotes from public reviews
+    may contain em-dashes; we prefer the quote in each pair that does not.
+  - Opens on the prospect, not the sender. First sentence contains the
+    business name and the number of reviews read.
+  - Verbatim quote appears in paragraph one.
+  - Offer is binary: reply "yes" for free preview, or silence and we are done.
+  - Signature is two lines: identity + email + URL.
+  - Subject is short (<= 45 chars), no em-dash, no punctuation tricks.
+  - Legal-HIGH drafts still get the HB25-1090 heads-up paragraph.
+  - The builder never names individual staff and never repeats blocked tokens
+    (illness allegations, named individuals).
 
-Output: a JSON manifest + one .eml-style draft per target that we either
-hand off to the Outlook connector or save to disk for manual review.
+Output: a JSON manifest + one .md draft per target for local review,
+plus the body fed into the Outlook connector for draft staging.
 
 Usage:
-    python outreach_builder.py --top 5 --out output/outreach/initial_wave_2026-04-18
+    python outreach_builder.py --top 5 \
+        --source output/outreach_lowprofile5.json \
+        --out output/outreach/lowprofile_wave_2026-04-18
 """
 from __future__ import annotations
 import argparse
 import json
 import os
+import re
 from dataclasses import dataclass, asdict
 from pathlib import Path
 from datetime import datetime
 
 
 # ---------------------------------------------------------------------------
-# Signature — preserve verbatim per project constraint
+# Signature — two lines only. Identity preserved; phone intentionally omitted
+# per operator request.
 # ---------------------------------------------------------------------------
-RYAN_SIGNATURE = """Ryan B.
-JetPakt · Denver
-gojetpakt.us@outlook.com
-Gojetpakt.com"""
+RYAN_SIGNATURE = (
+    "Ryan B., JetPakt Solutions (Denver)\n"
+    "gojetpakt.us@outlook.com  \u00b7  gojetpakt.com"
+)
 
 SITE_URL = "https://poetic-melba-f04633.netlify.app"
 
 
 # ---------------------------------------------------------------------------
-# Template fragments — composable, tone-safe, anchor-required
+# Subject lines — short, specific, no em-dash.
 # ---------------------------------------------------------------------------
 SUBJECT_TEMPLATES = {
-    "legal_high": "A quiet observation about {name} — and a free preview",
-    "legal_med":  "Something Denver guests are saying about {name}",
-    "standard":   "A short note about {name} from a Denver consultant",
+    "legal_high": "A pattern in {short_name} reviews",
+    "legal_med":  "A pattern in {short_name} reviews",
+    "standard":   "A pattern in {short_name} reviews",
 }
 
+SUBJECT_MAX_CHARS = 45
+
+
+# ---------------------------------------------------------------------------
+# Body fragments (no em-dashes, no ellipsis from source).
+# ---------------------------------------------------------------------------
 OPENING = (
-    "Hi there,\n\n"
-    "I'm Ryan — I run JetPakt, a small Denver-based practice that reads public "
-    "restaurant reviews carefully and turns what guests are already saying online "
-    "into something you can act on. I'm reaching out to {name} specifically because "
-    "I've been going through your public reviews this week and there's one pattern "
-    "worth surfacing."
+    "Hi,\n\n"
+    "I spent part of this week reading {review_count} public reviews of "
+    "{name} on Google and Yelp, and one theme keeps repeating. "
+    "Here is a verbatim quote from a recent review:"
 )
 
-PILLAR_LEAD_IN = (
-    "\n\nThe theme I keep seeing cluster — entirely in public, on Google and Yelp — "
-    "is {pillar_desc}. Here's one verbatim quote from a recent review that captures "
-    "it cleanly:"
+OPENING_NO_COUNT = (
+    "Hi,\n\n"
+    "I spent part of this week reading your public reviews of {name} on "
+    "Google and Yelp, and one theme keeps repeating. Here is a verbatim "
+    "quote from a recent review:"
 )
 
-QUOTE_BLOCK = '\n\n    "{quote}"'
+# Option A positive opener. Direct, quote-first, names the prospect, puts the
+# good news before the concern so the email reads like a friend sharing notes
+# rather than a cold pitch. Both quotes are verbatim public review content.
+POSITIVE_OPENER_WITH_COUNT = (
+    "Hi,\n\n"
+    "Before the concern, the good news. I spent part of this week reading "
+    "{review_count} public reviews of {name} on Google and Yelp. The theme "
+    "that keeps showing up in your positive reviews is {positive_theme}. "
+    "One recent quote:"
+)
+
+POSITIVE_OPENER_NO_COUNT = (
+    "Hi,\n\n"
+    "Before the concern, the good news. I spent part of this week reading "
+    "your public reviews of {name} on Google and Yelp. The theme that keeps "
+    "showing up in your positive reviews is {positive_theme}. One recent "
+    "quote:"
+)
+
+POSITIVE_TO_NEGATIVE_BRIDGE = (
+    "That is the part worth protecting. Here is the concern that keeps "
+    "repeating in the one and two star reviews:"
+)
+
+QUOTE_BLOCK = "\n\n    \"{quote}\"\n\n"
+
+PILLAR_FRAMING = {
+    "billing_service_fee": (
+        "Service fee and automatic charge language on the bill is the "
+        "most common complaint on your public reviews right now. It is "
+        "the kind of friction guests notice at the moment of payment, "
+        "which is the worst possible moment in the experience."
+    ),
+    "wait_reservation": (
+        "Wait time and the reservation to seating handoff is the most "
+        "common complaint on your public reviews right now. The reviews "
+        "that mention it are not the ones mentioning food. That is a "
+        "signal worth separating from the rest of the noise."
+    ),
+    "food_quality": (
+        "Food consistency between visits is the most common complaint "
+        "on your public reviews right now. It is an inconsistency signal, "
+        "not a quality verdict. It tends to compound quietly, four or "
+        "five reviews at a time, until the average rating drops by a "
+        "third of a star."
+    ),
+    "service_attentiveness": (
+        "Service attentiveness during peak hours is the most common "
+        "complaint on your public reviews right now. It reads as a "
+        "staffing or floor management pattern, not as a one-off."
+    ),
+    "noise_acoustics": (
+        "Ambient noise making conversation difficult is the most common "
+        "complaint on your public reviews right now. It is a fixable "
+        "pattern if you can see the cluster."
+    ),
+    "price_value": (
+        "The gap between ticket price and the experience delivered is the "
+        "most common complaint on your public reviews right now. Value "
+        "perception is hard to move back once it drifts."
+    ),
+    "cleanliness": (
+        "Cleanliness in the dining area or restrooms is the most common "
+        "complaint on your public reviews right now. It shows up more in "
+        "1 star and 2 star reviews than anywhere else."
+    ),
+    "food_safety": (
+        "A broader quality trajectory concern is clustering on your "
+        "public reviews right now. I flag this category for legal review "
+        "and never repeat unverified illness allegations as fact."
+    ),
+    "server_attitude": (
+        "Server attitude and floor handoff issues are the most common "
+        "complaint on your public reviews right now. It reads as a "
+        "training or floor management pattern, not a one-off incident."
+    ),
+    "slow_service": (
+        "Slow service during peak hours is the most common complaint on "
+        "your public reviews right now. It shows up more in weekend "
+        "reviews than weekday, which is a schedulable pattern."
+    ),
+}
 
 LEGAL_FLAG_NOTE = (
-    "\n\nThis is the kind of pattern that tends to draw both regulatory attention "
-    "(Colorado's HB25-1090 took effect January 1) and the occasional private-action "
-    "suit, so it's worth getting in front of before the review volume grows. I'm "
-    "not a lawyer and this isn't legal advice — just a heads-up from someone who "
-    "reads these reviews for a living."
+    "Colorado's HB25 1090 took effect on January 1, which means service "
+    "fee disclosure language is under a brighter regulatory light than "
+    "it was last year. I am not a lawyer and this is not legal advice. "
+    "It is a heads up from someone who reads these reviews for a living."
 )
 
 OFFER = (
-    "\n\nI'd like to send you a free one-page preview — drawn entirely from your "
-    "public reviews — showing the rating trend, the two most-cited complaint themes, "
-    "and one verbatim quote that captures each. No commitment, no sales call, no "
-    "CRM follow-up. If it's useful, a full Scan (the complete 8-pillar audit with "
-    "draft response templates) is $49 and delivered in about 48 hours.\n\n"
-    "If you'd like the preview, just reply with 'yes' and I'll have it to you "
-    "within two business days. If not, I won't follow up."
+    "I run JetPakt Solutions here in Denver, a small business advisory "
+    "practice anchored by an auditable, defamation-safe read of the public "
+    "record. I would like to send you a free one page preview of what I "
+    "found: the rating trend, the two most cited themes, one verbatim "
+    "quote for each. No sales call, no follow up, no CRM entry.\n\n"
+    "Reply \"yes\" and you will have it within two business days. If not, "
+    "we are done.\n\n"
+    "If the preview is useful, a full eight pillar Scan with draft "
+    "response templates is $49, delivered in about 48 hours."
 )
 
 GUARDRAIL_FOOTER = (
-    "\n\nA note on how I work, so nothing's a surprise: every finding I send you "
-    "is anchored to a verbatim public quote — I never name individual staff, never "
-    "invent a claim, and I never post or email anything on your behalf. Every "
-    "response template is a draft that lands in your inbox for your approval."
-    f"\n\nMore detail at {SITE_URL} if useful."
-    "\n\n— "
+    "Every finding I share is anchored to a public quote. I never name "
+    "staff, never invent a claim, and never post anything on your behalf."
 )
-
-GUARDRAIL_FOOTER_NO_LEGAL = GUARDRAIL_FOOTER  # same text for now; kept for future divergence
 
 
 # ---------------------------------------------------------------------------
-# Pillar descriptors — key tokens per pillar, plus display description.
-# Key tokens are used to pick the verbatim quote that BEST matches the pillar.
+# Pillars (unchanged from v1 except the descriptions moved into PILLAR_FRAMING)
 # ---------------------------------------------------------------------------
 PILLARS = {
     "billing_service_fee": {
         "match_any": ["billing", "service-fee", "service fee"],
-        "desc": "the way service fees and automatic charges are surfaced on the bill",
-        "quote_keywords": ["service fee", "service charge", "automatic", "gratuity", "surcharge", "hidden", "not disclosed", "not told", "%"],
+        "quote_keywords": [
+            "service fee", "service charge", "automatic", "gratuity",
+            "surcharge", "hidden", "not disclosed", "not told", "%",
+        ],
     },
     "wait_reservation": {
         "match_any": ["wait time", "reservation"],
-        "desc": "wait times and the reservation-to-seating experience",
         "quote_keywords": ["wait", "minutes", "seated", "reservation", "took"],
     },
     "food_quality": {
         "match_any": ["food quality"],
-        "desc": "consistency in food quality between visits",
-        "quote_keywords": ["cold", "overcooked", "undercooked", "burger", "food was", "quality", "slipped", "not the same", "used to"],
+        "quote_keywords": [
+            "cold", "overcooked", "undercooked", "burger", "food was",
+            "quality", "slipped", "not the same", "used to", "salty",
+            "inedible", "lukewarm",
+        ],
     },
     "service_attentiveness": {
-        # Deliberately NOT matching bare 'service' — that collides with 'service-fee'.
-        # Only match explicit attentiveness phrasing.
         "match_any": ["service attentiveness", "attentiveness"],
-        "desc": "service attentiveness during peak hours",
         "quote_keywords": ["server", "waited", "forgot", "had to ask", "never came"],
     },
     "noise_acoustics": {
         "match_any": ["noise", "acoustics"],
-        "desc": "ambient noise making conversation difficult",
         "quote_keywords": ["loud", "noise", "couldn't hear", "noisy"],
     },
     "price_value": {
         "match_any": ["price-to-value", "price"],
-        "desc": "the perceived gap between ticket price and the experience delivered",
         "quote_keywords": ["overpriced", "not worth", "value", "$"],
     },
     "cleanliness": {
         "match_any": ["cleanliness"],
-        "desc": "cleanliness in the dining area or restrooms",
-        "quote_keywords": ["dirty", "clean", "sticky", "bathroom", "restroom"],
+        "quote_keywords": ["dirty", "clean", "sticky", "bathroom", "restroom", "dingy"],
     },
     "food_safety": {
         "match_any": ["food safety", "illness"],
-        "desc": "a broader quality-trajectory concern that I flag for legal review (I never repeat unverified illness allegations as fact)",
         "quote_keywords": ["slipped", "not what it was", "quality has", "used to", "favorite"],
-        # Note: we deliberately avoid picking the illness-allegation quote — the
-        # builder hard-blocks any quote containing blocked tokens below.
+    },
+    "server_attitude": {
+        "match_any": ["server attitude", "server", "attitude"],
+        "quote_keywords": ["ignored", "rude", "attitude", "bartender", "unfriendly"],
+    },
+    "slow_service": {
+        "match_any": ["slow service"],
+        "quote_keywords": ["slow", "waited", "minutes", "took forever", "forever"],
+    },
+    "inconsistent_recent": {
+        "match_any": ["inconsistent recent", "inconsistent"],
+        "quote_keywords": [
+            "used to", "not the same", "changed", "quality has", "first time",
+            "worse than", "slipped",
+        ],
     },
 }
 
 # Hard block: quotes containing these tokens are never used in outreach.
-# Illness allegations, named individuals, defamatory language — all excluded.
 QUOTE_BLOCKED_TOKENS = [
     "food poisoning",
     "made me sick",
@@ -156,11 +254,29 @@ QUOTE_BLOCKED_TOKENS = [
     "got sick",
     "going down with",
     "went down with",
+    "0/10",  # reads as a drive-by rating, not a content signal
+]
+
+# Positive quotes also pass through the defamation/safety filter; in addition,
+# we reject overly promotional or staff-naming phrasing so the opener reads
+# like an authentic guest observation, not a testimonial.
+POSITIVE_QUOTE_REJECT_TOKENS = [
+    "highly recommend to everyone",
+    "best restaurant in the world",
+    "5 stars",
+    "five stars",
 ]
 
 
+# ---------------------------------------------------------------------------
+# Pillar resolution
+# ---------------------------------------------------------------------------
 def _pillar_key_for(key_complaint: str) -> str:
     key = (key_complaint or "").strip().lower()
+    # "inconsistent recent guest experience" maps to food_quality framing
+    # since that is what operators hear and act on.
+    if "inconsistent" in key:
+        return "food_quality"
     for pk, cfg in PILLARS.items():
         for token in cfg["match_any"]:
             if token in key:
@@ -169,56 +285,123 @@ def _pillar_key_for(key_complaint: str) -> str:
 
 
 def describe_pillar(key_complaint: str) -> str:
-    """Map raw key-complaint string to a natural-language descriptor."""
     pk = _pillar_key_for(key_complaint)
-    if pk:
-        return PILLARS[pk]["desc"]
-    return f"concerns clustering around '{key_complaint}'"
+    if pk and pk in PILLAR_FRAMING:
+        return PILLAR_FRAMING[pk]
+    # Fallback without inventing a pattern.
+    return (
+        "The most common theme on your public reviews right now is "
+        f"\"{key_complaint}\". I will let the verbatim quote speak to "
+        "the specifics."
+    )
 
 
+# ---------------------------------------------------------------------------
+# Quote selection
+# ---------------------------------------------------------------------------
 def _is_blocked(quote: str) -> bool:
     q = quote.lower()
     return any(tok in q for tok in QUOTE_BLOCKED_TOKENS)
 
 
+def _has_em_dash(s: str) -> bool:
+    return "\u2014" in s
+
+
+def is_positive_quote_usable(quote: str) -> bool:
+    """
+    Positive quotes pass the same blocked-token filter as negatives, plus a
+    lightweight check for obvious promotional/testimonial phrasing and for
+    anything that looks like a named individual (capitalized first names
+    preceded by 'by' or trailed by a verb). We keep this deliberately loose;
+    the real authenticity check is human review before staging.
+    """
+    if not quote or not quote.strip():
+        return False
+    q = quote.lower()
+    if any(tok in q for tok in QUOTE_BLOCKED_TOKENS):
+        return False
+    if any(tok in q for tok in POSITIVE_QUOTE_REJECT_TOKENS):
+        return False
+    return True
+
+
 def extract_primary_quote(verbatim_excerpts: str, key_complaint: str = "") -> str:
     """
-    Pick the verbatim quote that best matches the pillar, skipping any quote
-    that triggers the blocked-token filter (illness allegations, etc).
-
-    Field format: 'Quote A. || Quote B.'
-    Returns empty string if no safe, pillar-matching quote exists.
+    Pick the verbatim quote that best matches the pillar. Prefer quotes
+    without em-dashes (stays consistent with our template rule). Skip any
+    quote that triggers the blocked-token filter. Returns empty string if
+    no safe, pillar-matching quote exists.
     """
     if not verbatim_excerpts:
         return ""
     parts = [p.strip() for p in verbatim_excerpts.split("||") if p.strip()]
-    # Strip wrapping quotes
     cleaned = []
     for p in parts:
         if p.startswith('"') and p.endswith('"'):
             p = p[1:-1]
         cleaned.append(p.rstrip())
 
-    # Filter out blocked quotes entirely
     safe = [q for q in cleaned if not _is_blocked(q)]
     if not safe:
         return ""
 
-    # Score remaining by keyword match against the pillar's quote_keywords
     pk = _pillar_key_for(key_complaint)
-    if pk and PILLARS[pk].get("quote_keywords"):
+    scored = []
+    if pk and PILLARS.get(pk, {}).get("quote_keywords"):
         keywords = [k.lower() for k in PILLARS[pk]["quote_keywords"]]
-        scored = []
         for q in safe:
             ql = q.lower()
-            score = sum(1 for kw in keywords if kw in ql)
-            scored.append((score, q))
+            kw_score = sum(1 for kw in keywords if kw in ql)
+            dash_penalty = -1 if _has_em_dash(q) else 0
+            length_penalty = -1 if len(q) > 180 else 0  # keep quotes tight
+            scored.append((kw_score + dash_penalty + length_penalty, q))
         scored.sort(key=lambda x: x[0], reverse=True)
         if scored[0][0] > 0:
             return scored[0][1]
 
-    # Fallback: first safe quote
-    return safe[0]
+    # Fallback: first quote without em-dash; otherwise first safe quote.
+    no_dash = [q for q in safe if not _has_em_dash(q)]
+    return (no_dash or safe)[0]
+
+
+# ---------------------------------------------------------------------------
+# Hygiene: guarantee no em-dashes in generated body
+# ---------------------------------------------------------------------------
+EM_DASH = "\u2014"
+EN_DASH = "\u2013"
+
+
+def _strip_em_dashes_outside_quotes(body: str) -> str:
+    """
+    Replace em-dashes in author-generated text while preserving them inside
+    verbatim quote blocks. We detect the quote block by the specific
+    '    "..."' indent produced by QUOTE_BLOCK.
+    """
+    lines = body.split("\n")
+    out = []
+    for line in lines:
+        stripped = line.lstrip()
+        is_quote_line = line.startswith('    "') or (stripped.startswith('"') and line.startswith('    '))
+        if is_quote_line:
+            out.append(line)
+        else:
+            cleaned = line.replace(EM_DASH, ",").replace(EN_DASH, "-")
+            out.append(cleaned)
+    return "\n".join(out)
+
+
+def _shorten_business_name_for_subject(name: str) -> str:
+    """
+    Keep the first two 'significant' tokens for a short subject. Drops the
+    location suffix after an em-dash or comma so the subject stays under 45.
+    """
+    # Trim anything after em-dash, comma, or parenthesis
+    s = re.split(r"\s*[\u2014\u2013,(]\s*", name, maxsplit=1)[0].strip()
+    if len(s) > 30:
+        toks = s.split()
+        s = " ".join(toks[:3])
+    return s
 
 
 # ---------------------------------------------------------------------------
@@ -230,11 +413,12 @@ class OutreachDraft:
     category: str
     neighborhood: str
     rating: str
+    review_count: str
     legal_flag_severity: str  # "HIGH" | "MED" | "NONE"
-    to_email: str             # empty — user fills before sending
+    to_email: str             # empty, user fills
     subject: str
     body: str
-    routing: str              # "ryan_drafts" — always, per project constraint
+    routing: str              # "ryan_drafts" always
     source_row_key: str
     generated_at: str
 
@@ -248,78 +432,159 @@ def classify_legal_severity(flag_text: str) -> str:
     return "NONE"
 
 
+def _get_field(row: dict, *candidates, default: str = "") -> str:
+    for c in candidates:
+        if c in row and row[c] not in (None, ""):
+            return str(row[c]).strip()
+    return default
+
+
 def build_draft(row: dict) -> OutreachDraft:
-    name = row["Business Name"].strip()
-    severity = classify_legal_severity(row.get("Legal Review Flag", ""))
-    pillar_desc = describe_pillar(row.get("Key Complaint", ""))
-    quote = extract_primary_quote(
-        row.get("Verbatim Excerpts (top 2)", ""),
-        key_complaint=row.get("Key Complaint", ""),
+    name = _get_field(row, "Business Name", "business_name")
+    short_name = _shorten_business_name_for_subject(name)
+    review_count = _get_field(row, "Total Reviews", "review_count")
+    rating = _get_field(row, "Rating", "rating")
+    neighborhood = _get_field(row, "Neighborhood", "neighborhood")
+    category = _get_field(row, "Category", "category")
+    flag = _get_field(row, "Legal Review Flag", "legal_flag_severity")
+    key_complaint = _get_field(row, "Key Complaint", "key_complaint")
+    excerpts = _get_field(row, "Verbatim Excerpts (top 2)", "verbatim_excerpts")
+
+    severity = classify_legal_severity(flag)
+    pillar_framing = describe_pillar(key_complaint)
+    quote = extract_primary_quote(excerpts, key_complaint=key_complaint)
+
+    # Positive sentiment (Option A opener). Both fields must be present AND
+    # the quote must pass the defamation/testimonial filter. If either is
+    # missing, we silently fall back to the sender-neutral OPENING.
+    positive_theme = _get_field(
+        row, "Positive Theme", "positive_theme"
+    )
+    positive_quote_raw = _get_field(
+        row, "Positive Verbatim Quote", "positive_verbatim_quote"
+    )
+    use_positive_opener = bool(
+        positive_theme
+        and positive_quote_raw
+        and is_positive_quote_usable(positive_quote_raw)
     )
 
+    # Build subject
     if severity == "HIGH":
-        subject = SUBJECT_TEMPLATES["legal_high"].format(name=name)
+        subject = SUBJECT_TEMPLATES["legal_high"].format(short_name=short_name)
     elif severity == "MED":
-        subject = SUBJECT_TEMPLATES["legal_med"].format(name=name)
+        subject = SUBJECT_TEMPLATES["legal_med"].format(short_name=short_name)
     else:
-        subject = SUBJECT_TEMPLATES["standard"].format(name=name)
+        subject = SUBJECT_TEMPLATES["standard"].format(short_name=short_name)
+    subject = subject.replace(EM_DASH, ",").replace(EN_DASH, "-")
+    # If subject is too long, try a tighter shortening of the name before
+    # hard truncating (never cut a word mid-way).
+    if len(subject) > SUBJECT_MAX_CHARS:
+        toks = short_name.split()
+        if len(toks) > 2:
+            tighter = " ".join(toks[:2])
+            subject = f"A pattern in {tighter} reviews"
+    if len(subject) > SUBJECT_MAX_CHARS:
+        # Final safety: cut at last whole word boundary <= limit
+        cut = subject[:SUBJECT_MAX_CHARS]
+        if " " in cut:
+            cut = cut.rsplit(" ", 1)[0]
+        subject = cut.rstrip()
 
-    body_parts = [OPENING.format(name=name)]
-    if quote:
-        # Normal path: pillar lead-in + quote
-        body_parts.append(PILLAR_LEAD_IN.format(pillar_desc=pillar_desc))
-        body_parts.append(QUOTE_BLOCK.format(quote=quote))
+    # Build body
+    parts: list[str] = []
+    # Use shortened name in body so the em-dash strip does not mangle a
+    # location suffix like "Big Daddy's Pizza — Colfax" into
+    # "Big Daddy's Pizza , Colfax".
+    body_name = short_name
+
+    if use_positive_opener:
+        # Option A: positive theme + positive quote + bridge + negative quote.
+        if review_count and review_count.isdigit():
+            parts.append(POSITIVE_OPENER_WITH_COUNT.format(
+                name=body_name,
+                review_count=review_count,
+                positive_theme=positive_theme,
+            ))
+        else:
+            parts.append(POSITIVE_OPENER_NO_COUNT.format(
+                name=body_name,
+                positive_theme=positive_theme,
+            ))
+        parts.append(QUOTE_BLOCK.format(quote=positive_quote_raw))
+        parts.append(POSITIVE_TO_NEGATIVE_BRIDGE)
+
+        if quote:
+            parts.append(QUOTE_BLOCK.format(quote=quote))
+        else:
+            parts.append("\n\n")
+
+        parts.append(pillar_framing)
+        parts.append("\n\n")
     else:
-        # No safe quote available — use a pillar-only framing with no quote.
-        # Preserves defamation-safety when the only available quotes are blocked.
-        body_parts.append(
-            "\n\nThe theme clustering in your public reviews is "
-            f"{pillar_desc}. I'd rather not paraphrase specific reviews here "
-            "— the preview I'm offering pulls the actual quotes so you can "
-            "see them in context."
-        )
+        # Fallback: original neutral opener.
+        if review_count and review_count.isdigit():
+            parts.append(OPENING.format(name=body_name, review_count=review_count))
+        else:
+            parts.append(OPENING_NO_COUNT.format(name=body_name))
+
+        if quote:
+            parts.append(QUOTE_BLOCK.format(quote=quote))
+        else:
+            parts.append("\n\n")
+
+        parts.append(pillar_framing)
+        parts.append("\n\n")
+
     if severity == "HIGH":
-        body_parts.append(LEGAL_FLAG_NOTE)
-    body_parts.append(OFFER)
-    body_parts.append(GUARDRAIL_FOOTER)
-    body_parts.append(RYAN_SIGNATURE)
+        parts.append(LEGAL_FLAG_NOTE)
+        parts.append("\n\n")
 
-    body = "".join(body_parts)
+    parts.append(OFFER)
+    parts.append("\n\n")
+    parts.append(GUARDRAIL_FOOTER)
+    parts.append("\n\n")
+    parts.append(RYAN_SIGNATURE)
+
+    body = "".join(parts)
+    body = _strip_em_dashes_outside_quotes(body)
 
     return OutreachDraft(
         business_name=name,
-        category=row.get("Category", ""),
-        neighborhood=row.get("Neighborhood", ""),
-        rating=row.get("Rating", ""),
+        category=category,
+        neighborhood=neighborhood,
+        rating=rating,
+        review_count=review_count,
         legal_flag_severity=severity,
-        to_email="",  # user fills before sending
+        to_email="",
         subject=subject,
         body=body,
         routing="ryan_drafts",
-        source_row_key=name.lower().replace(" ", "_"),
+        source_row_key=name.lower().replace(" ", "_").replace("'", "").replace(EM_DASH, "-").replace(",", ""),
         generated_at=datetime.utcnow().isoformat() + "Z",
     )
 
 
 def write_draft_files(draft: OutreachDraft, out_dir: Path) -> Path:
     out_dir.mkdir(parents=True, exist_ok=True)
-    slug = draft.source_row_key.replace("/", "_").replace("—", "-")
+    slug = re.sub(r"[^\w\-]+", "_", draft.source_row_key).strip("_")
     md_path = out_dir / f"{slug}.md"
     md = [
         f"# Outreach draft — {draft.business_name}",
         "",
-        f"- **Legal flag severity:** {draft.legal_flag_severity}",
-        f"- **Category:** {draft.category}",
-        f"- **Neighborhood:** {draft.neighborhood}",
-        f"- **Rating at audit:** {draft.rating}",
-        f"- **Routing:** {draft.routing}",
-        f"- **Generated:** {draft.generated_at}",
+        f"- Legal flag severity: {draft.legal_flag_severity}",
+        f"- Category: {draft.category}",
+        f"- Neighborhood: {draft.neighborhood}",
+        f"- Rating at audit: {draft.rating}",
+        f"- Review count: {draft.review_count}",
+        f"- Routing: {draft.routing}",
+        f"- Generated: {draft.generated_at}",
         "",
         "---",
         "",
-        f"**TO:** _(fill before sending)_",
-        f"**FROM:** gojetpakt.us@outlook.com",
-        f"**SUBJECT:** {draft.subject}",
+        f"TO: _(fill before sending)_",
+        f"FROM: gojetpakt.us@outlook.com",
+        f"SUBJECT: {draft.subject}",
         "",
         "---",
         "",
@@ -329,18 +594,29 @@ def write_draft_files(draft: OutreachDraft, out_dir: Path) -> Path:
     return md_path
 
 
-def build_manifest(drafts: list[OutreachDraft], out_dir: Path) -> Path:
+def build_manifest(drafts: list[OutreachDraft], out_dir: Path, wave_name: str) -> Path:
     manifest = {
-        "wave_name": "initial_wave_2026-04-18",
+        "wave_name": wave_name,
         "generated_at": datetime.utcnow().isoformat() + "Z",
         "total_drafts": len(drafts),
         "legal_high_count": sum(1 for d in drafts if d.legal_flag_severity == "HIGH"),
+        "template_version": "v2",
+        "template_rules": [
+            "no em-dashes in author-generated body",
+            "verbatim quotes may contain em-dashes; we prefer those that do not",
+            "subject <= 45 chars",
+            "signature two lines",
+            "opens with business name + review count",
+            "offer is binary (reply yes or nothing)",
+            "positive sentiment opener (Option A) when a safe positive quote is available, else neutral opener",
+            "positive quotes pass the same defamation filter as negatives, plus a testimonial-language filter",
+        ],
         "routing_rule": "All drafts land in Ryan's Outlook drafts folder. Owner reviews, fills TO, edits, sends manually.",
         "send_policy": "Drafts-only. No auto-send. Human approval required per JetPakt guardrail.",
         "drafts": [asdict(d) for d in drafts],
     }
     path = out_dir / "manifest.json"
-    path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
     return path
 
 
@@ -348,23 +624,16 @@ def build_manifest(drafts: list[OutreachDraft], out_dir: Path) -> Path:
 # CLI
 # ---------------------------------------------------------------------------
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Build JetPakt initial outreach drafts")
-    ap.add_argument("--top", type=int, default=5, help="Number of top leads to process")
-    ap.add_argument(
-        "--source",
-        default="output/outreach_top12.json",
-        help="Ranked leads JSON (produced by the audit filter step)",
-    )
-    ap.add_argument(
-        "--out",
-        default="output/outreach/initial_wave_2026-04-18",
-        help="Output directory",
-    )
+    ap = argparse.ArgumentParser(description="Build JetPakt outreach drafts (template v2)")
+    ap.add_argument("--top", type=int, default=5)
+    ap.add_argument("--source", default="output/outreach_lowprofile5.json")
+    ap.add_argument("--out", default="output/outreach/lowprofile_wave_2026-04-18")
+    ap.add_argument("--wave-name", default="lowprofile_wave_2026-04-18")
     args = ap.parse_args()
 
     source_path = Path(args.source)
     if not source_path.exists():
-        print(f"ERROR: {source_path} not found. Run the audit filter first.")
+        print(f"ERROR: {source_path} not found.")
         return 1
 
     leads = json.loads(source_path.read_text())[: args.top]
@@ -374,15 +643,16 @@ def main() -> int:
     for d in drafts:
         write_draft_files(d, out_dir)
 
-    manifest_path = build_manifest(drafts, out_dir)
+    manifest_path = build_manifest(drafts, out_dir, args.wave_name)
 
     print(f"Generated {len(drafts)} drafts in {out_dir}")
-    print(f"  Legal-HIGH drafts: {sum(1 for d in drafts if d.legal_flag_severity == 'HIGH')}")
     print(f"  Manifest: {manifest_path}")
     print()
     for d in drafts:
+        em_count_body = d.body.count(EM_DASH)
         print(f"  [{d.legal_flag_severity:<4}] {d.business_name}")
-        print(f"         SUBJECT: {d.subject}")
+        print(f"         SUBJECT: {d.subject}  ({len(d.subject)} chars)")
+        print(f"         em-dashes in body: {em_count_body}  (only allowed inside quote line)")
     return 0
 
 

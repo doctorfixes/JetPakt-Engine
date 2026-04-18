@@ -1,11 +1,17 @@
 """
-JetPakt Scan v2 — Branded PDF renderer.
+JetPakt Operator Memo — Branded PDF renderer.
+
+This is the Drift Diagnosis output (what was formerly called "Scan"). The
+cover leads with the dominant operating pillar, the matched ROS case, and
+the monthly revenue-recovery midpoint. Review-surface metrics (rating,
+negative share, review count, peer delta) remain on the cover as supporting
+evidence, not as the headline.
 
 Reads a scan dict from scan_engine.build_scan() and writes a hospitality-first
 branded PDF using:
   - Instrument Serif (display) + Inter (body/UI) via Google Fonts
   - Teal #20808D chart accent, link #01696F, cream #F7F6F2 background
-  - Metadata: Author=Perplexity Computer, Title="JetPakt Reputation Scan — <name>"
+  - Metadata: Author=Perplexity Computer, Title="JetPakt Operator Memo — <name>"
 """
 
 from __future__ import annotations
@@ -312,7 +318,7 @@ def _page_decor(canvas, doc, business_name: str, jetpakt_contact: dict[str, str]
     except Exception:
         canvas.setFont("Helvetica-Bold", 9)
     canvas.drawString(0.6 * inch, h - 0.22 * inch,
-                      "JETPAKT · REPUTATION SCAN")
+                      "JETPAKT · OPERATOR MEMO")
     canvas.drawRightString(w - 0.6 * inch, h - 0.22 * inch,
                            business_name.upper())
 
@@ -377,17 +383,62 @@ def _cover(scan: dict[str, Any], S: dict[str, ParagraphStyle]) -> list:
 
     story = []
     story.append(Spacer(1, 0.9 * inch))
-    story.append(Paragraph("JETPAKT · ONE-TIME SCAN", S["cover_kicker"]))
+    story.append(Paragraph("JETPAKT · OPERATOR MEMO · DRIFT DIAGNOSIS", S["cover_kicker"]))
     story.append(Paragraph(biz.name, S["cover_title"]))
     story.append(Paragraph(
         f"{biz.address} · {biz.city}",
         S["cover_sub"],
     ))
     story.append(Paragraph(
-        f"Scan generated {scan['generated_at']}",
+        f"Memo generated {scan['generated_at']}",
         S["cover_sub"],
     ))
     story.append(Spacer(1, 0.35 * inch))
+
+    # --- Three-up drift header: dominant pillar / matched ROS case / recovery mid ---
+    # These are the three headline outputs per the v3 repositioning spec.
+    # Sits above the review-surface KPIs so the memo opens with the operating
+    # diagnosis, not the rating number.
+    ros = scan.get("ros_pillars") or {}
+    dominant = ros.get("dominant_pillar") or "—"
+    # Pull the first case_ref from the dominant pillar bucket if present
+    dom_bucket = next((p for p in ros.get("pillars", []) if p.get("pillar") == dominant), None)
+    case_refs = (dom_bucket or {}).get("case_refs", []) if dom_bucket else []
+    case_label = case_refs[0] if case_refs else "—"
+    rec = scan.get("recovery") or {}
+    if rec.get("qualify"):
+        rec_label = f"${rec.get('monthly_mid', 0):,.0f}/mo"
+        rec_sub = "est. monthly recovery (mid)"
+    else:
+        rec_label = "Below threshold"
+        rec_sub = "qualitative read only"
+
+    drift_header_rows = [
+        [
+            Paragraph(dominant, S["kpi_value"]),
+            Paragraph(case_label, S["kpi_value"]),
+            Paragraph(rec_label, S["kpi_value"]),
+        ],
+        [
+            Paragraph("Dominant pillar", S["kpi_label"]),
+            Paragraph("Matched ROS case", S["kpi_label"]),
+            Paragraph(rec_sub, S["kpi_label"]),
+        ],
+    ]
+    drift_header = Table(drift_header_rows, colWidths=[2.2 * inch, 2.2 * inch, 2.2 * inch], hAlign="LEFT")
+    drift_header.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, -1), SURFACE),
+        ("BOX", (0, 0), (-1, -1), 0.4, BORDER),
+        ("INNERGRID", (0, 0), (-1, -1), 0.4, BORDER),
+        ("LEFTPADDING", (0, 0), (-1, -1), 12),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 12),
+        ("TOPPADDING", (0, 0), (-1, 0), 14),
+        ("BOTTOMPADDING", (0, 0), (-1, 0), 2),
+        ("TOPPADDING", (0, 1), (-1, 1), 0),
+        ("BOTTOMPADDING", (0, 1), (-1, 1), 12),
+    ]))
+    story.append(drift_header)
+    story.append(Spacer(1, 0.25 * inch))
 
     # KPI row
     kpi_rows = [
@@ -442,8 +493,8 @@ def _cover(scan: dict[str, Any], S: dict[str, ParagraphStyle]) -> list:
 
     story.append(Spacer(1, 0.4 * inch))
     story.append(Paragraph(
-        "Prepared by JetPakt · ReviewSentinel methodology · "
-        "Every finding below is tied to a verbatim public review.",
+        "Prepared by JetPakt · Five-pillar drift diagnosis · "
+        "Every finding below is tied to a verbatim public source.",
         S["muted"],
     ))
     return story
@@ -469,12 +520,28 @@ def _exec_summary(scan: dict[str, Any], S: dict[str, ParagraphStyle]) -> list:
         f"3-peer local benchmark ({bench['avg_peer_rating']:.2f} average).",
         S["body"],
     ))
-    story.append(Paragraph(
-        f"The three signals driving the most guest friction right now are "
-        f"<b>{sig_names}</b>. All are actionable inside 30–90 days without "
-        f"capex, and none require public apology statements.",
-        S["body"],
-    ))
+    # Dominant-pillar sentence (new v3 framing) — names the pillar and case
+    ros = scan.get("ros_pillars") or {}
+    dominant = ros.get("dominant_pillar")
+    dom_bucket = next((p for p in ros.get("pillars", []) if p.get("pillar") == dominant), None) if dominant else None
+    case_refs = (dom_bucket or {}).get("case_refs", []) if dom_bucket else []
+    case_label = case_refs[0] if case_refs else None
+    if dominant and case_label:
+        story.append(Paragraph(
+            f"The dominant operating drift this period is on the <b>{dominant}</b> pillar, "
+            f"matched to Restaurant Operating System case <b>{case_label}</b>. The three "
+            f"signals carrying the most severity-weighted evidence are <b>{sig_names}</b>. "
+            f"All are actionable inside 30–90 days without capex, and none require public "
+            f"apology statements.",
+            S["body"],
+        ))
+    else:
+        story.append(Paragraph(
+            f"The three signals driving the most operator-facing drift right now are "
+            f"<b>{sig_names}</b>. All are actionable inside 30–90 days without "
+            f"capex, and none require public apology statements.",
+            S["body"],
+        ))
     if scan["legal_flags"]:
         names = ", ".join(f["signal"] for f in scan["legal_flags"])
         story.append(Paragraph(
@@ -503,7 +570,7 @@ def _recovery_box(scan: dict[str, Any], S: dict[str, ParagraphStyle]) -> list:
         story.append(Paragraph(
             "Review volume and price tier sit below the threshold where we "
             "quote a specific dollar recovery range. The signals below are "
-            "still actionable; this scan flags where a 30-day playbook would "
+            "still actionable; this memo flags where a 30-day playbook would "
             "most likely move the needle.",
             S["body"],
         ))
@@ -537,7 +604,7 @@ def _recovery_box(scan: dict[str, Any], S: dict[str, ParagraphStyle]) -> list:
         [
             Paragraph("Estimated monthly recovery range", label_style),
             Paragraph("Annualized at the conservative floor", label_style),
-            Paragraph("Projected ROI on the $49 scan", label_style),
+            Paragraph("Projected ROI on the $49 Drift Diagnosis", label_style),
         ],
     ]
     col_w = [2.3 * inch, 2.0 * inch, 1.85 * inch]
@@ -619,7 +686,7 @@ def _review_growth_box(scan: dict[str, Any], S: dict[str, ParagraphStyle]) -> li
     story: list = []
     story.append(Paragraph("Grow review volume — the compliant way", S["h2"]))
     story.append(Paragraph(
-        f"More recent reviews compound with the fixes in this scan: they "
+        f"More recent reviews compound with the fixes in this memo: they "
         f"improve Google local-pack ranking, smooth out the rating when a "
         f"bad night happens, and give the 30/60/90 plan something to "
         f"measure against. You have {biz.review_count:,} lifetime reviews "
@@ -653,7 +720,7 @@ def _review_growth_box(scan: dict[str, Any], S: dict[str, ParagraphStyle]) -> li
             "Responding to reviews \u2014 positive <i>and</i> negative \u2014 is "
             "the single biggest signal Google associates with higher local "
             "ranking. Use the defamation-safe response templates later in "
-            "this scan.",
+            "this memo.",
         ),
         (
             "Staff scripting, consistent across shifts",
@@ -727,7 +794,7 @@ def _review_growth_box(scan: dict[str, Any], S: dict[str, ParagraphStyle]) -> li
 
 
 def _signals_section(scan: dict[str, Any], S: dict[str, ParagraphStyle]) -> list:
-    story = [Paragraph("Top 3 quantified signals", S["h1"])]
+    story = [Paragraph("Top drift signals", S["h1"])]
     story.append(Paragraph(
         "Severity is scored 1–10 from recent negative share, review "
         "recency, and evidence density. Every signal is tied to verbatim "
@@ -778,7 +845,7 @@ def _signals_section(scan: dict[str, Any], S: dict[str, ParagraphStyle]) -> list
 
 
 def _peer_section(scan: dict[str, Any], S: dict[str, ParagraphStyle]) -> list:
-    story = [Paragraph("Local peer benchmark", S["h1"])]
+    story = [Paragraph("Pillar rollup and local peer benchmark", S["h1"])]
     story.append(Paragraph(
         "Comparison against 3 nearby peer restaurants. Ratings are pulled "
         "from public review platforms (Yelp, TripAdvisor, Google). Peers "
@@ -967,9 +1034,9 @@ def _response_drafts_section(scan: dict[str, Any], S: dict[str, ParagraphStyle])
 def _upsell_section(scan: dict[str, Any], S: dict[str, ParagraphStyle]) -> list:
     story = [Paragraph("Where this can go next", S["h1"])]
     story.append(Paragraph(
-        "This document is the $49 One-Time Scan. JetPakt also runs "
-        "continuous monitoring, multi-location dashboards, and workflow-"
-        "integrated reputation operations.",
+        "This document is the $49 Drift Diagnosis (Operator Memo). JetPakt also runs "
+        "the Drift Monitor, a recurring read that flags pillar shifts, new ROS "
+        "cases, and recovery-range changes between memos.",
         S["body"],
     ))
     hdr_style = ParagraphStyle(
@@ -1055,7 +1122,7 @@ def render_scan_pdf(scan: dict[str, Any], out_path: str,
     doc = BaseDocTemplate(
         out_path,
         pagesize=letter,
-        title=f"JetPakt Reputation Scan — {biz.name}",
+        title=f"JetPakt Operator Memo — {biz.name}",
         author="Perplexity Computer",
         leftMargin=0.6 * inch,
         rightMargin=0.6 * inch,

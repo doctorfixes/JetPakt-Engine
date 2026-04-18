@@ -1,5 +1,5 @@
 """
-JetPakt Pulse — delivery module.
+JetPakt Drift Monitor — delivery module.
 
 Takes a rendered PulseInsight + PDF path and produces a structured draft
 payload ready for the Outlook connector. We never auto-send; the caller
@@ -69,10 +69,11 @@ _SALUTATION = "Hi team,"  # no individual names, per project rule
 
 _BOILERPLATE_CLOSING_HTML = (
     '<p style="color:#6b6b6b;font-size:12px">'
-    "This is a JetPakt Pulse digest — a recurring readout of your public "
-    "reputation signals. We never solicit, reply to, or respond to reviews "
-    "without your explicit approval. Every claim above is tied to verbatim "
-    "public reviews available in the attached PDF."
+    "This is a JetPakt Drift Monitor digest — a recurring readout of the "
+    "dominant operating pillar, drift direction, and any new Restaurant "
+    "Operating System case matches. We never solicit, reply to, or respond "
+    "to reviews without your explicit approval. Every claim above is tied "
+    "to verbatim public reviews available in the attached PDF."
     "</p>"
     '<p style="color:#6b6b6b;font-size:12px">'
     "Ryan B. · "
@@ -82,10 +83,11 @@ _BOILERPLATE_CLOSING_HTML = (
 )
 
 _BOILERPLATE_CLOSING_TEXT = (
-    "\n--\nThis is a JetPakt Pulse digest — a recurring readout of your public "
-    "reputation signals. We never solicit, reply to, or respond to reviews "
-    "without your explicit approval. Every claim above is tied to verbatim "
-    "public reviews available in the attached PDF.\n\n"
+    "\n--\nThis is a JetPakt Drift Monitor digest — a recurring readout of "
+    "the dominant operating pillar, drift direction, and any new Restaurant "
+    "Operating System case matches. We never solicit, reply to, or respond "
+    "to reviews without your explicit approval. Every claim above is tied "
+    "to verbatim public reviews available in the attached PDF.\n\n"
     "Ryan B. · gojetpakt.us@outlook.com · Gojetpakt.com\n"
 )
 
@@ -98,12 +100,12 @@ def _subject_for(insight: PulseInsight) -> str:
     date = insight.snapshot_date
 
     if insight.is_first_run:
-        return f"JetPakt Pulse — {name} — baseline established ({date})"
+        return f"JetPakt Drift Monitor — {name} — baseline ({date})"
     if insight.overall_severity == "HIGH":
-        return f"[ALERT] JetPakt Pulse — {name} — material change ({date})"
+        return f"[ALERT] JetPakt Drift Monitor — {name} — pillar drift ({date})"
     if insight.overall_severity == "MED":
-        return f"JetPakt Pulse — {name} — signals moved ({date})"
-    return f"JetPakt Pulse — {name} — {cadence} digest ({date})"
+        return f"JetPakt Drift Monitor — {name} — signals drifted ({date})"
+    return f"JetPakt Drift Monitor — {name} — {cadence} digest ({date})"
 
 
 def _summary_lines(insight: PulseInsight) -> list[str]:

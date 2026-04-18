@@ -1,10 +1,14 @@
 """
-JetPakt Pulse — PDF report renderer.
+JetPakt Drift Monitor — PDF report renderer.
 
 Takes a PulseInsight from pulse_engine and produces a single-page (weekly) or
 two-page (monthly) PDF. Reuses scan_pdf fonts, palette, and page decor so
-clients see a consistent brand across the one-time scan and the recurring
-Pulse reports.
+clients see a consistent brand across the one-time Operator Memo and the
+recurring Drift Monitor reports.
+
+The lead section surfaces the dominant operating pillar and the drift
+direction (which pillar shifted, whether the peer gap widened or narrowed)
+before the rating-delta banner, per REPOSITION_V3_SPEC.md §4.
 """
 
 from __future__ import annotations
@@ -44,7 +48,7 @@ def _pulse_page_decor(canvas, doc, account_name: str, cadence: str,
         canvas.setFont("DMSans", 9)
     except Exception:
         canvas.setFont("Helvetica-Bold", 9)
-    tag = f"JETPAKT · PULSE · {cadence.upper()}"
+    tag = f"JETPAKT · DRIFT MONITOR · {cadence.upper()}"
     canvas.drawString(0.6 * inch, h - 0.22 * inch, tag)
     canvas.drawRightString(w - 0.6 * inch, h - 0.22 * inch, account_name.upper())
     # Footer
@@ -84,18 +88,75 @@ def _severity_pill(level: str, S: dict) -> Table:
 
 def _header(insight: PulseInsight, S: dict) -> list:
     cadence = insight.account.cadence.title()
-    period = insight.snapshot_date
     if insight.prior_date:
         period_line = f"Period: {insight.prior_date} → {insight.snapshot_date}"
     else:
         period_line = f"Baseline snapshot · {insight.snapshot_date}"
     story = [
-        Paragraph(f"JETPAKT · PULSE · {cadence.upper()} DIGEST", S["cover_kicker"]),
+        Paragraph(
+            f"JETPAKT · DRIFT MONITOR · {cadence.upper()} DIGEST",
+            S["cover_kicker"],
+        ),
         Paragraph(safe_para_text(insight.account.name), S["cover_title"]),
         Paragraph(period_line, S["cover_sub"]),
         Spacer(1, 12),
     ]
     return story
+
+
+def _drift_lead(insight: PulseInsight, S: dict) -> list:
+    """Lead sentence: dominant pillar + drift direction.
+
+    Sits above the rating-delta banner. Per REPOSITION_V3_SPEC.md §4, the
+    pillar story is the headline; rating is a supporting KPI.
+    """
+    pillar = insight.dominant_pillar or "—"
+    if insight.is_first_run:
+        lead = (
+            f"Dominant operating pillar this period is <b>{pillar}</b>. "
+            f"This is the baseline — next cycle will compare against today."
+        )
+    else:
+        # Derive drift-direction fragments from the change list.
+        pillar_change = next(
+            (c for c in (insight.changes or []) if c.kind == "pillar_shift"),
+            None,
+        )
+        gap_widened = any(
+            c.kind == "peer_gap_widened" for c in (insight.changes or [])
+        )
+        rating_change = next(
+            (c for c in (insight.changes or [])
+             if c.kind in ("rating_drop_high", "rating_drop", "rating_rise")),
+            None,
+        )
+
+        if pillar_change is not None:
+            pillar_phrase = (
+                f"Dominant pillar shifted to <b>{pillar}</b> this period."
+            )
+        else:
+            pillar_phrase = (
+                f"Dominant pillar held on <b>{pillar}</b> this period."
+            )
+
+        direction_bits: list[str] = []
+        if gap_widened:
+            direction_bits.append("peer gap widened")
+        if rating_change is not None:
+            if rating_change.kind == "rating_rise":
+                direction_bits.append("rating moved up")
+            else:
+                direction_bits.append("rating moved down")
+        if not direction_bits:
+            direction_bits.append("rating and peer gap held within drift")
+
+        lead = (
+            f"{pillar_phrase} Supporting movement: "
+            f"{', '.join(direction_bits)}."
+        )
+
+    return [Paragraph(lead, S["body"]), Spacer(1, 8)]
 
 
 def _snapshot_strip(insight: PulseInsight, S: dict) -> Table:
@@ -183,11 +244,11 @@ def _overall_banner(insight: PulseInsight, S: dict) -> list:
 
 def _changes_section(insight: PulseInsight, S: dict) -> list:
     """Ranked table of changes: pill · kind · description."""
-    story: list = [Paragraph("What changed", S["h2"])]
+    story: list = [Paragraph("What drifted", S["h2"])]
     if not insight.changes:
         story.append(Paragraph(
-            "Nothing material moved this cycle. Rating, signal severity, and "
-            "peer position are within normal drift.", S["body"]))
+            "Nothing material drifted this cycle. Rating, signal severity, "
+            "and peer position are within normal variation.", S["body"]))
         return story
 
     # Sort HIGH > MED > LOW
@@ -272,7 +333,7 @@ def render_pulse_pdf(insight: PulseInsight, output_path: str | Path) -> str:
         pagesize=letter,
         leftMargin=0.6 * inch, rightMargin=0.6 * inch,
         topMargin=0.65 * inch, bottomMargin=0.65 * inch,
-        title=f"JetPakt Pulse — {insight.account.name}",
+        title=f"JetPakt Drift Monitor — {insight.account.name}",
         author="Perplexity Computer",
     )
     frame = Frame(
@@ -289,6 +350,7 @@ def render_pulse_pdf(insight: PulseInsight, output_path: str | Path) -> str:
 
     story: list = []
     story += _header(insight, S)
+    story += _drift_lead(insight, S)
     story.append(_snapshot_strip(insight, S))
     story.append(Spacer(1, 12))
     story += _overall_banner(insight, S)

@@ -38,7 +38,7 @@ from datetime import datetime
 # per operator request.
 # ---------------------------------------------------------------------------
 RYAN_SIGNATURE = (
-    "Ryan B., JetPakt Solutions (Denver)\n"
+    "Ryan B., JetPakt Solutions\n"
     "gojetpakt.us@outlook.com  \u00b7  gojetpakt.com"
 )
 
@@ -165,7 +165,7 @@ LEGAL_FLAG_NOTE = (
 )
 
 OFFER = (
-    "I run JetPakt Solutions here in Denver, a small business advisory "
+    "I run JetPakt Solutions, a small business advisory "
     "practice anchored by an auditable, defamation-safe read of the public "
     "record. I would like to send you a free one page preview of what I "
     "found: the rating trend, the two most cited themes, one verbatim "

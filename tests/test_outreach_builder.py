@@ -222,7 +222,7 @@ def test_build_draft_signature_is_two_lines():
     d = build_draft(_example_row())
     # The signature appears at the very end of the body.
     sig_lines = d.body.rstrip().split("\n")[-2:]
-    assert sig_lines[0] == "Ryan B., JetPakt Solutions (Denver)"
+    assert sig_lines[0] == "Ryan B., JetPakt Solutions"
     assert "gojetpakt.us@outlook.com" in sig_lines[1]
     assert "gojetpakt.com" in sig_lines[1]
 

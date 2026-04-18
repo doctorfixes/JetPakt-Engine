@@ -1,17 +1,19 @@
 """
-JetPakt — Initial Outreach Builder (v2)
+JetPakt — Initial Outreach Builder (v3)
 
-Template v2 rules (locked):
-  - No em-dashes in generated body. Only hyphens where grammatically required
-    (compound modifiers like "one-page"). Verbatim quotes from public reviews
-    may contain em-dashes; we prefer the quote in each pair that does not.
-  - Opens on the prospect, not the sender. First sentence contains the
-    business name and the number of reviews read.
-  - Verbatim quote appears in paragraph one.
-  - Offer is binary: reply "yes" for free preview, or silence and we are done.
+Template v3 rules (locked — per REPOSITION_V3_SPEC.md §5.1):
+  - Drift-first framing. The first sentence names the review volume read and
+    then asserts that the same operating signal is repeating, in ROS
+    pillar + case terms. Reviews are the symptom; the pillar is the problem.
+  - Subject: "A drift pattern in {short_name} reviews" (<= 45 chars).
+  - Verbatim quote appears in paragraph one (quote as evidence of drift,
+    not as the subject of the email).
+  - Offer is the $49 Drift Diagnosis (Operator Memo) with a projected
+    revenue-recovery range. Still binary reply (yes or silence).
   - Signature is two lines: identity + email + URL.
-  - Subject is short (<= 45 chars), no em-dash, no punctuation tricks.
-  - Legal-HIGH drafts still get the HB25-1090 heads-up paragraph.
+  - No em-dashes in author-generated body. Verbatim quotes may contain
+    em-dashes; we prefer those without.
+  - Legal-HIGH drafts still get the HB25 1090 heads-up paragraph.
   - The builder never names individual staff and never repeats blocked tokens
     (illness allegations, named individuals).
 
@@ -49,9 +51,9 @@ SITE_URL = "https://poetic-melba-f04633.netlify.app"
 # Subject lines — short, specific, no em-dash.
 # ---------------------------------------------------------------------------
 SUBJECT_TEMPLATES = {
-    "legal_high": "A pattern in {short_name} reviews",
-    "legal_med":  "A pattern in {short_name} reviews",
-    "standard":   "A pattern in {short_name} reviews",
+    "legal_high": "A drift pattern in {short_name} reviews",
+    "legal_med":  "A drift pattern in {short_name} reviews",
+    "standard":   "A drift pattern in {short_name} reviews",
 }
 
 SUBJECT_MAX_CHARS = 45
@@ -62,16 +64,18 @@ SUBJECT_MAX_CHARS = 45
 # ---------------------------------------------------------------------------
 OPENING = (
     "Hi,\n\n"
-    "I spent part of this week reading {review_count} public reviews of "
-    "{name} on Google and Yelp, and one theme keeps repeating. "
-    "Here is a verbatim quote from a recent review:"
+    "Reading the last {review_count} public reviews of {name}, the same "
+    "operating signal is repeating. It reads as a {pillar_name}-pillar "
+    "drift, specifically Restaurant Operating System case {case_id} "
+    "({case_oneliner}). Here is one verbatim quote from a recent review:"
 )
 
 OPENING_NO_COUNT = (
     "Hi,\n\n"
-    "I spent part of this week reading your public reviews of {name} on "
-    "Google and Yelp, and one theme keeps repeating. Here is a verbatim "
-    "quote from a recent review:"
+    "Reading your public reviews of {name}, the same operating signal is "
+    "repeating. It reads as a {pillar_name}-pillar drift, specifically "
+    "Restaurant Operating System case {case_id} ({case_oneliner}). Here "
+    "is one verbatim quote from a recent review:"
 )
 
 # Option A positive opener. Direct, quote-first, names the prospect, puts the
@@ -79,106 +83,133 @@ OPENING_NO_COUNT = (
 # rather than a cold pitch. Both quotes are verbatim public review content.
 POSITIVE_OPENER_WITH_COUNT = (
     "Hi,\n\n"
-    "Before the concern, the good news. I spent part of this week reading "
-    "{review_count} public reviews of {name} on Google and Yelp. The theme "
-    "that keeps showing up in your positive reviews is {positive_theme}. "
-    "One recent quote:"
+    "Before the drift, the good news. Reading {review_count} public reviews "
+    "of {name}, the theme that keeps showing up in positive reviews is "
+    "{positive_theme}. One recent quote:"
 )
 
 POSITIVE_OPENER_NO_COUNT = (
     "Hi,\n\n"
-    "Before the concern, the good news. I spent part of this week reading "
-    "your public reviews of {name} on Google and Yelp. The theme that keeps "
-    "showing up in your positive reviews is {positive_theme}. One recent "
-    "quote:"
+    "Before the drift, the good news. Reading your public reviews of "
+    "{name}, the theme that keeps showing up in positive reviews is "
+    "{positive_theme}. One recent quote:"
 )
 
 POSITIVE_TO_NEGATIVE_BRIDGE = (
-    "That is the part worth protecting. Here is the concern that keeps "
-    "repeating in the one and two star reviews:"
+    "That is the part worth protecting. Alongside it, the same operating "
+    "signal is repeating in the one and two star reviews. It reads as a "
+    "{pillar_name}-pillar drift, specifically Restaurant Operating System "
+    "case {case_id} ({case_oneliner}). One verbatim quote:"
 )
 
 QUOTE_BLOCK = "\n\n    \"{quote}\"\n\n"
 
+# ---------------------------------------------------------------------------
+# ROS pillar + case mapping. Source: docs/ROS_FRAMEWORK.md.
+# Each complaint bucket resolves to (ROS pillar name, ROS case_id, case
+# one-liner). The outreach copy names the pillar and case directly so the
+# email reads as a diagnosis, not an opinion.
+# ---------------------------------------------------------------------------
+PILLAR_META = {
+    "billing_service_fee":   ("Sales",       "I12", "service-fee disclosure drift"),
+    "wait_reservation":      ("Operations",  "I15", "reservation-to-seating handoff drift"),
+    "food_quality":          ("Production",  "I02", "food consistency drift between visits"),
+    "service_attentiveness": ("Service",     "I06", "peak-hour attentiveness drift"),
+    "noise_acoustics":       ("Operations",  "I17", "room-acoustics drift"),
+    "price_value":           ("Sales",       "I11", "price-to-value perception drift"),
+    "cleanliness":           ("Operations",  "I18", "dining-area cleanliness drift"),
+    "food_safety":           ("Production",  "I04", "quality-trajectory concern cluster"),
+    "server_attitude":       ("Service",     "I08", "floor-handoff and server-demeanor drift"),
+    "slow_service":          ("Service",     "I07", "service-pacing drift, peak hours"),
+}
+
+DEFAULT_PILLAR_META = ("Operations", "I14", "operating-drift cluster")
+
 PILLAR_FRAMING = {
     "billing_service_fee": (
-        "Service fee and automatic charge language on the bill is the "
-        "most common complaint on your public reviews right now. It is "
-        "the kind of friction guests notice at the moment of payment, "
-        "which is the worst possible moment in the experience."
+        "This is the friction guests notice at the moment of payment, which "
+        "is the worst possible moment in the experience. It compounds "
+        "quietly: the same complaint repeats across reviews without ever "
+        "being anyone's job to fix."
     ),
     "wait_reservation": (
-        "Wait time and the reservation to seating handoff is the most "
-        "common complaint on your public reviews right now. The reviews "
-        "that mention it are not the ones mentioning food. That is a "
-        "signal worth separating from the rest of the noise."
+        "The reviews that mention it are not the ones mentioning food. That "
+        "is a staffing-and-routing signal worth separating from the rest of "
+        "the noise, and it points to a 30-day operational fix rather than a "
+        "capex spend."
     ),
     "food_quality": (
-        "Food consistency between visits is the most common complaint "
-        "on your public reviews right now. It is an inconsistency signal, "
-        "not a quality verdict. It tends to compound quietly, four or "
-        "five reviews at a time, until the average rating drops by a "
-        "third of a star."
+        "This is an inconsistency signal, not a quality verdict. It tends "
+        "to compound quietly, four or five reviews at a time, until the "
+        "average rating drops by a third of a star. The fix is usually a "
+        "line-check and a prep-log discipline, not a menu rewrite."
     ),
     "service_attentiveness": (
-        "Service attentiveness during peak hours is the most common "
-        "complaint on your public reviews right now. It reads as a "
-        "staffing or floor management pattern, not as a one-off."
+        "It reads as a staffing or floor-management pattern, not a one-off. "
+        "Matched cases recover inside 30 to 60 days without capex when the "
+        "pacing change is the first thing the owner calls out at pre-shift."
     ),
     "noise_acoustics": (
-        "Ambient noise making conversation difficult is the most common "
-        "complaint on your public reviews right now. It is a fixable "
-        "pattern if you can see the cluster."
+        "This is a fixable pattern once the cluster is visible: seat routing, "
+        "one absorber panel, or a music-level SOP usually moves the needle "
+        "without a remodel."
     ),
     "price_value": (
-        "The gap between ticket price and the experience delivered is the "
-        "most common complaint on your public reviews right now. Value "
-        "perception is hard to move back once it drifts."
+        "Value perception is hard to move back once it drifts. The lever is "
+        "rarely price; it is what the check communicates and how the final "
+        "minutes of the meal land."
     ),
     "cleanliness": (
-        "Cleanliness in the dining area or restrooms is the most common "
-        "complaint on your public reviews right now. It shows up more in "
-        "1 star and 2 star reviews than anywhere else."
+        "It shows up more in 1 star and 2 star reviews than anywhere else, "
+        "which is what makes it a drift signal rather than a one-off. A "
+        "shift-by-shift walk-through typically catches it inside two weeks."
     ),
     "food_safety": (
-        "A broader quality trajectory concern is clustering on your "
-        "public reviews right now. I flag this category for legal review "
-        "and never repeat unverified illness allegations as fact."
+        "Broader quality-trajectory concerns cluster here. I flag this "
+        "category for legal review and never repeat unverified illness "
+        "allegations as fact. The memo names the drift and leaves the "
+        "response language to ownership and counsel."
     ),
     "server_attitude": (
-        "Server attitude and floor handoff issues are the most common "
-        "complaint on your public reviews right now. It reads as a "
-        "training or floor management pattern, not a one-off incident."
+        "It reads as a training or floor-management pattern, not a one-off "
+        "incident. The cases matched to this drift typically recover with a "
+        "one-page service-standards reset and consistent shift-start "
+        "reinforcement."
     ),
     "slow_service": (
-        "Slow service during peak hours is the most common complaint on "
-        "your public reviews right now. It shows up more in weekend "
-        "reviews than weekday, which is a schedulable pattern."
+        "It shows up more in weekend reviews than weekday, which is a "
+        "schedulable pattern. The 30-day play is usually a staffing or "
+        "station-map change, not a hiring push."
     ),
 }
 
 LEGAL_FLAG_NOTE = (
     "Colorado's HB25 1090 took effect on January 1, which means service "
-    "fee disclosure language is under a brighter regulatory light than "
-    "it was last year. I am not a lawyer and this is not legal advice. "
-    "It is a heads up from someone who reads these reviews for a living."
+    "fee disclosure language is under a brighter regulatory light than it "
+    "was last year. I am not a lawyer and this is not legal advice. It is "
+    "a heads up from someone who reads these reviews for a living."
 )
 
 OFFER = (
-    "I run JetPakt Solutions, a small business advisory "
-    "practice anchored by an auditable, defamation-safe read of the public "
-    "record. I would like to send you a free one page preview of what I "
-    "found: the rating trend, the two most cited themes, one verbatim "
-    "quote for each. No sales call, no follow up, no CRM entry.\n\n"
+    "I run JetPakt Solutions. The product is a drift diagnosis for "
+    "independent restaurants: five operating pillars, matched Restaurant "
+    "Operating System case, and a defensible revenue-recovery range tied "
+    "to verbatim public reviews.\n\n"
+    "I would like to send you a free one-page preview: the dominant "
+    "pillar this quarter, the matched case, and one verbatim quote "
+    "supporting it. No sales call, no follow up, no CRM entry.\n\n"
     "Reply \"yes\" and you will have it within two business days. If not, "
     "we are done.\n\n"
-    "If the preview is useful, a full eight pillar Scan with draft "
-    "response templates is $49, delivered in about 48 hours."
+    "If the preview is useful, the full $49 Drift Diagnosis (Operator "
+    "Memo) lands in about 48 hours. It includes the pillar rollup, the "
+    "30/60/90-day action plan tied to the matched case, and a conservative "
+    "monthly revenue-recovery range."
 )
 
 GUARDRAIL_FOOTER = (
-    "Every finding I share is anchored to a public quote. I never name "
-    "staff, never invent a claim, and never post anything on your behalf."
+    "Every finding I share is anchored to a verbatim public quote. I never "
+    "name staff, never invent a claim, and never post anything on your "
+    "behalf. Software finds the pattern. The owner makes the call."
 )
 
 
@@ -290,10 +321,24 @@ def describe_pillar(key_complaint: str) -> str:
         return PILLAR_FRAMING[pk]
     # Fallback without inventing a pattern.
     return (
-        "The most common theme on your public reviews right now is "
-        f"\"{key_complaint}\". I will let the verbatim quote speak to "
-        "the specifics."
+        "The verbatim quote above speaks to the specifics. The diagnosis is "
+        "scored against the five operating pillars, not reviewer opinion, "
+        "so the 30/60/90-day plan targets the underlying system, not a "
+        "single shift."
     )
+
+
+def pillar_meta_for(key_complaint: str) -> tuple[str, str, str]:
+    """Resolve a complaint into (ROS pillar name, case_id, case one-liner).
+
+    Falls back to an Operations/I14 generic drift cluster when the key
+    complaint does not match a known pillar. Ensures the drift-first opener
+    always has a pillar and case to name — never "unknown".
+    """
+    pk = _pillar_key_for(key_complaint)
+    if pk and pk in PILLAR_META:
+        return PILLAR_META[pk]
+    return DEFAULT_PILLAR_META
 
 
 # ---------------------------------------------------------------------------
@@ -452,6 +497,7 @@ def build_draft(row: dict) -> OutreachDraft:
 
     severity = classify_legal_severity(flag)
     pillar_framing = describe_pillar(key_complaint)
+    pillar_name, case_id, case_oneliner = pillar_meta_for(key_complaint)
     quote = extract_primary_quote(excerpts, key_complaint=key_complaint)
 
     # Positive sentiment (Option A opener). Both fields must be present AND
@@ -499,7 +545,8 @@ def build_draft(row: dict) -> OutreachDraft:
     body_name = short_name
 
     if use_positive_opener:
-        # Option A: positive theme + positive quote + bridge + negative quote.
+        # Option A: positive theme + positive quote + drift bridge + negative
+        # quote. Both quotes are verbatim public review content.
         if review_count and review_count.isdigit():
             parts.append(POSITIVE_OPENER_WITH_COUNT.format(
                 name=body_name,
@@ -512,7 +559,11 @@ def build_draft(row: dict) -> OutreachDraft:
                 positive_theme=positive_theme,
             ))
         parts.append(QUOTE_BLOCK.format(quote=positive_quote_raw))
-        parts.append(POSITIVE_TO_NEGATIVE_BRIDGE)
+        parts.append(POSITIVE_TO_NEGATIVE_BRIDGE.format(
+            pillar_name=pillar_name,
+            case_id=case_id,
+            case_oneliner=case_oneliner,
+        ))
 
         if quote:
             parts.append(QUOTE_BLOCK.format(quote=quote))
@@ -522,11 +573,22 @@ def build_draft(row: dict) -> OutreachDraft:
         parts.append(pillar_framing)
         parts.append("\n\n")
     else:
-        # Fallback: original neutral opener.
+        # Drift-first neutral opener.
         if review_count and review_count.isdigit():
-            parts.append(OPENING.format(name=body_name, review_count=review_count))
+            parts.append(OPENING.format(
+                name=body_name,
+                review_count=review_count,
+                pillar_name=pillar_name,
+                case_id=case_id,
+                case_oneliner=case_oneliner,
+            ))
         else:
-            parts.append(OPENING_NO_COUNT.format(name=body_name))
+            parts.append(OPENING_NO_COUNT.format(
+                name=body_name,
+                pillar_name=pillar_name,
+                case_id=case_id,
+                case_oneliner=case_oneliner,
+            ))
 
         if quote:
             parts.append(QUOTE_BLOCK.format(quote=quote))
@@ -600,15 +662,16 @@ def build_manifest(drafts: list[OutreachDraft], out_dir: Path, wave_name: str) -
         "generated_at": datetime.utcnow().isoformat() + "Z",
         "total_drafts": len(drafts),
         "legal_high_count": sum(1 for d in drafts if d.legal_flag_severity == "HIGH"),
-        "template_version": "v2",
+        "template_version": "v3",
         "template_rules": [
+            "drift-first framing: first sentence names review volume + ROS pillar + case",
+            "subject: 'A drift pattern in {short_name} reviews' (<= 45 chars)",
             "no em-dashes in author-generated body",
             "verbatim quotes may contain em-dashes; we prefer those that do not",
-            "subject <= 45 chars",
             "signature two lines",
-            "opens with business name + review count",
             "offer is binary (reply yes or nothing)",
-            "positive sentiment opener (Option A) when a safe positive quote is available, else neutral opener",
+            "offer names the $49 Drift Diagnosis (Operator Memo) and the revenue-recovery range",
+            "positive sentiment opener (Option A) when a safe positive quote is available, else drift-first opener",
             "positive quotes pass the same defamation filter as negatives, plus a testimonial-language filter",
         ],
         "routing_rule": "All drafts land in Ryan's Outlook drafts folder. Owner reviews, fills TO, edits, sends manually.",
@@ -624,7 +687,7 @@ def build_manifest(drafts: list[OutreachDraft], out_dir: Path, wave_name: str) -
 # CLI
 # ---------------------------------------------------------------------------
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Build JetPakt outreach drafts (template v2)")
+    ap = argparse.ArgumentParser(description="Build JetPakt outreach drafts (template v3)")
     ap.add_argument("--top", type=int, default=5)
     ap.add_argument("--source", default="output/outreach_lowprofile5.json")
     ap.add_argument("--out", default="output/outreach/lowprofile_wave_2026-04-18")

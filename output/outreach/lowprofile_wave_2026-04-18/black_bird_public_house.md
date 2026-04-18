@@ -6,35 +6,37 @@
 - Rating at audit: 3.3
 - Review count: 312
 - Routing: ryan_drafts
-- Generated: 2026-04-18T17:01:13.752273Z
+- Generated: 2026-04-18T18:15:41.866785Z
 
 ---
 
 TO: _(fill before sending)_
 FROM: gojetpakt.us@outlook.com
-SUBJECT: A pattern in Black Bird Public House reviews
+SUBJECT: A pattern in Black Bird reviews
 
 ---
 
 Hi,
 
-Before the concern, the good news. I spent part of this week reading 312 public reviews of Black Bird Public House on Google and Yelp. The theme that keeps showing up in your positive reviews is patio that feels far from Denver. One recent quote:
+Before the drift, the good news. Reading 312 public reviews of Black Bird Public House, the theme that keeps showing up in positive reviews is a patio that feels like a getaway. One recent quote:
 
     "The patio honestly transports you somewhere far from Denver."
 
-That is the part worth protecting. Here is the concern that keeps repeating in the one and two star reviews:
+That is the part worth protecting. Alongside it, the same operating signal is repeating in the one and two star reviews. It reads as a Service-pillar drift, specifically Restaurant Operating System case I07 (service-pacing drift, peak hours). One verbatim quote:
 
     "Waited forty minutes for two drinks and never got a check-in."
 
-Slow service during peak hours is the most common complaint on your public reviews right now. It shows up more in weekend reviews than weekday, which is a schedulable pattern.
+It shows up more in weekend reviews than weekday, which is a schedulable pattern. The 30-day play is usually a staffing or station-map change, not a hiring push.
 
-I run JetPakt Solutions, a small business advisory practice anchored by an auditable, defamation-safe read of the public record. I would like to send you a free one page preview of what I found: the rating trend, the two most cited themes, one verbatim quote for each. No sales call, no follow up, no CRM entry.
+I run JetPakt Solutions. The product is a drift diagnosis for independent restaurants: five operating pillars, matched Restaurant Operating System case, and a defensible revenue-recovery range tied to verbatim public reviews.
+
+I would like to send you a free one-page preview: the dominant pillar this quarter, the matched case, and one verbatim quote supporting it. No sales call, no follow up, no CRM entry.
 
 Reply "yes" and you will have it within two business days. If not, we are done.
 
-If the preview is useful, a full eight pillar Scan with draft response templates is $49, delivered in about 48 hours.
+If the preview is useful, the full $49 Drift Diagnosis (Operator Memo) lands in about 48 hours. It includes the pillar rollup, the 30/60/90-day action plan tied to the matched case, and a conservative monthly revenue-recovery range.
 
-Every finding I share is anchored to a public quote. I never name staff, never invent a claim, and never post anything on your behalf.
+Every finding I share is anchored to a verbatim public quote. I never name staff, never invent a claim, and never post anything on your behalf. Software finds the pattern. The owner makes the call.
 
 Ryan B., JetPakt Solutions
 gojetpakt.us@outlook.com  ·  gojetpakt.com

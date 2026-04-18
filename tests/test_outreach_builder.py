@@ -1,5 +1,5 @@
 """
-Tests for outreach_builder (template v2).
+Tests for outreach_builder (template v3 — drift diagnosis, five pillars).
 
 Run: python -m pytest tests/test_outreach_builder.py -q
 """
@@ -93,8 +93,11 @@ def test_classify_legal_severity():
 # Pillar framing
 # ---------------------------------------------------------------------------
 def test_describe_pillar_service_fee():
+    # v3 pillar framing discusses payment-moment friction; the ROS case
+    # naming ("service-fee disclosure drift") is carried in the opener copy,
+    # not the framing paragraph.
     d = describe_pillar("billing / service-fee transparency")
-    assert "service fee" in d.lower()
+    assert "payment" in d.lower()
 
 
 def test_describe_pillar_is_em_dash_free():
@@ -137,7 +140,7 @@ def test_strip_em_dashes_outside_quote_lines():
 
 
 # ---------------------------------------------------------------------------
-# Full draft integration (template v2)
+# Full draft integration (template v3)
 # ---------------------------------------------------------------------------
 def _example_row(**overrides):
     base = {
@@ -168,6 +171,17 @@ def test_build_draft_body_contains_review_count_in_opening():
     d = build_draft(_example_row())
     assert "412 public reviews" in d.body
     assert "Example Eatery" in d.body
+
+
+def test_build_draft_opens_with_drift_framing():
+    # v3: drift-first opener names the pillar and Restaurant Operating
+    # System case directly in paragraph one. For a service-fee complaint
+    # that resolves to the Sales pillar + case I12.
+    d = build_draft(_example_row())
+    assert "the same operating signal is repeating" in d.body
+    assert "Sales-pillar drift" in d.body
+    assert "Restaurant Operating System case I12" in d.body
+    assert "service-fee disclosure drift" in d.body
 
 
 def test_build_draft_body_has_no_em_dashes_outside_quotes():
@@ -214,8 +228,13 @@ def test_build_draft_subject_is_short():
 
 def test_build_draft_subject_uses_short_name():
     d = build_draft(_example_row(**{"Business Name": "Big Daddy's Pizza \u2014 Colfax"}))
-    assert d.subject == "A pattern in Big Daddy's Pizza reviews"
+    assert d.subject == "A drift pattern in Big Daddy's Pizza reviews"
     assert len(d.subject) <= SUBJECT_MAX_CHARS
+
+
+def test_build_draft_subject_uses_drift_pattern_prefix():
+    d = build_draft(_example_row())
+    assert d.subject.startswith("A drift pattern in ")
 
 
 def test_build_draft_signature_is_two_lines():
@@ -232,6 +251,23 @@ def test_build_draft_offer_is_binary():
     assert "Reply \"yes\"" in d.body
     assert "within two business days" in d.body
     assert "$49" in d.body
+
+
+def test_build_draft_offer_names_drift_diagnosis_and_recovery():
+    # v3: the offer must name the product (Drift Diagnosis / Operator Memo)
+    # and the revenue-recovery range — the two things that distinguish the
+    # reposition from "reputation intelligence".
+    d = build_draft(_example_row())
+    assert "Drift Diagnosis" in d.body
+    assert "Operator Memo" in d.body
+    assert "revenue-recovery range" in d.body
+    assert "five operating pillars" in d.body
+
+
+def test_build_draft_guardrail_footer_present():
+    d = build_draft(_example_row())
+    assert "Software finds the pattern." in d.body
+    assert "The owner makes the call." in d.body
 
 
 # ---------------------------------------------------------------------------
@@ -265,23 +301,27 @@ def test_build_draft_uses_positive_opener_when_available():
         "Positive Verbatim Quote": "The patio is the reason we keep coming back on Sundays.",
     })
     d = build_draft(row)
-    # Positive opener phrase present
-    assert "Before the concern, the good news" in d.body
+    # v3 positive opener phrase: "Before the drift, the good news"
+    assert "Before the drift, the good news" in d.body
     # Positive theme interpolated
     assert "neighborhood patio spot" in d.body
     # Positive quote present and indented as a quote block
     assert '"The patio is the reason we keep coming back on Sundays."' in d.body
-    # Bridge to negative
+    # v3 bridge to negative names the pillar + ROS case
     assert "That is the part worth protecting" in d.body
+    assert "Sales-pillar drift" in d.body
+    assert "case I12" in d.body
     # Negative quote still present
     assert "automatic service fee" in d.body.lower()
 
 
 def test_build_draft_falls_back_to_neutral_opener_when_positive_missing():
-    # Default example row has no positive fields
+    # Default example row has no positive fields — should use the v3
+    # drift-first neutral opener, not the positive opener.
     d = build_draft(_example_row())
-    assert "Before the concern, the good news" not in d.body
-    assert "I spent part of this week reading" in d.body
+    assert "Before the drift, the good news" not in d.body
+    assert "Reading the last 412 public reviews" in d.body
+    assert "the same operating signal is repeating" in d.body
 
 
 def test_build_draft_positive_opener_has_no_em_dashes_in_generated_text():
@@ -297,11 +337,12 @@ def test_build_draft_positive_opener_has_no_em_dashes_in_generated_text():
 
 
 def test_build_draft_falls_back_when_positive_quote_is_blocked():
-    # Blocked positive quote (contains a defamation token) should cause fallback
+    # Blocked positive quote (contains a defamation token) should cause
+    # fallback to the v3 drift-first neutral opener.
     row = _example_row(**{
         "Positive Theme": "neighborhood patio spot",
         "Positive Verbatim Quote": "Loved it even though I got sick after dinner.",
     })
     d = build_draft(row)
-    assert "Before the concern, the good news" not in d.body
+    assert "Before the drift, the good news" not in d.body
     assert "got sick" not in d.body.lower()

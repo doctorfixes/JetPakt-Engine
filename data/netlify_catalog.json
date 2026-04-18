@@ -1,0 +1,20 @@
+{
+  "_note": "Netlify site registry for JetPakt. Updated when sites are deployed or renamed.",
+  "generated_at": "2026-04-18",
+  "sites": [
+    {
+      "name": "jetpakt-marketing",
+      "slug": "poetic-melba-f04633",
+      "url": "https://poetic-melba-f04633.netlify.app",
+      "admin_url": "https://app.netlify.com/projects/poetic-melba-f04633",
+      "repo": "doctorfixes/jetpakt-denver-leadgen",
+      "branch": "main",
+      "publish_dir": "jetpakt-site",
+      "purpose": "Public marketing landing page",
+      "custom_domain": null,
+      "custom_domain_note": "gojetpakt.com is held by another Netlify site. Using .netlify.app slug only for now.",
+      "suggested_rename_slugs": ["jetpakt-pulse", "jetpakt-pilot", "gojetpakt-pilot"],
+      "first_deployed": "2026-04-18"
+    }
+  ]
+}

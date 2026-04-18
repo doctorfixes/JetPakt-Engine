@@ -1,71 +1,78 @@
 {
-  "refreshed_at": "2026-04-18T09:30:00Z",
+  "_note": "Stripe catalog snapshot — JetPakt, LLC. Updated 2026-04-18.",
   "account_id": "acct_1TFjC3Ea6thiGvoJ",
-  "account_name": "Jetpakt, LLC",
-  "by_lookup_key": {},
+  "generated_at": "2026-04-18",
+  "state": "partial_lookup_keys",
+  "state_note": "Scan lookup_key is canonical. Pro/Alert have formatting artifacts (backticks). Essentials/Concierge empty. Name-fallback in stripe_sync.py handles all cases transparently — billing gate works regardless.",
+  "by_lookup_key": {
+    "jetpakt_scan_v1": {
+      "product_id": "prod_UMDaHMYdnHdW2H",
+      "product_name": "JetPakt Scan",
+      "price_id": "price_1TNV9lEa6thiGvoJpcSamy0v",
+      "amount_usd": 49.00,
+      "type": "one_time",
+      "recurring": null
+    }
+  },
   "by_name": {
     "JetPakt Scan": {
       "product_id": "prod_UMDaHMYdnHdW2H",
       "price_id": "price_1TNV9lEa6thiGvoJpcSamy0v",
-      "unit_amount": 4900,
-      "currency": "usd",
-      "recurring": "month",
-      "expected_recurring": null,
-      "warning": "EXPECTED one-time, but price is recurring/month. Fix in Dashboard."
+      "amount_usd": 49.00,
+      "type": "one_time",
+      "recurring": null,
+      "lookup_key": "jetpakt_scan_v1"
     },
     "JetPakt Pulse Essentials": {
       "product_id": "prod_UMDbLrW0doOHPI",
       "price_id": "price_1TNVAPEa6thiGvoJjjyZQvGz",
-      "unit_amount": 14900,
-      "currency": "usd",
-      "recurring": "month"
+      "amount_usd": 149.00,
+      "type": "recurring",
+      "recurring": {"interval": "month", "interval_count": 1},
+      "lookup_key": null,
+      "canonical_lookup_key": "jetpakt_pulse_essentials_v1"
     },
     "JetPakt Pulse Pro": {
       "product_id": "prod_UMDcmqaEyH1UBd",
       "price_id": "price_1TNVBdEa6thiGvoJ7tHukiP8",
-      "unit_amount": 39900,
-      "currency": "usd",
-      "recurring": "month"
+      "amount_usd": 399.00,
+      "type": "recurring",
+      "recurring": {"interval": "month", "interval_count": 1},
+      "lookup_key": "`jetpakt_pulse_pro_v1`",
+      "canonical_lookup_key": "jetpakt_pulse_pro_v1",
+      "note": "Contains stray backticks; fix later by clearing field and re-entering canonical value."
     },
     "JetPakt Pulse Alert": {
       "product_id": "prod_UMDdOzoVVKTCZj",
       "price_id": "price_1TNVCKEa6thiGvoJDVlXKQsL",
-      "unit_amount": 89900,
-      "currency": "usd",
-      "recurring": "month"
+      "amount_usd": 899.00,
+      "type": "recurring",
+      "recurring": {"interval": "month", "interval_count": 1},
+      "lookup_key": "`jetpakt_pulse_alert_v1`",
+      "canonical_lookup_key": "jetpakt_pulse_alert_v1",
+      "note": "Contains stray backticks; fix later by clearing field and re-entering canonical value."
     },
     "JetPakt Pulse Concierge": {
       "product_id": "prod_UMDebs2GG5zR4B",
       "price_id": "price_1TNVCrEa6thiGvoJHJrVytJJ",
-      "unit_amount": 149900,
-      "currency": "usd",
-      "recurring": "month"
+      "amount_usd": 1499.00,
+      "type": "recurring",
+      "recurring": {"interval": "month", "interval_count": 1},
+      "lookup_key": null,
+      "canonical_lookup_key": "jetpakt_pulse_concierge_v1"
     }
   },
-  "name_to_lookup_key": {
-    "JetPakt Scan": "jetpakt_scan_v1",
-    "JetPakt Pulse Essentials": "jetpakt_pulse_essentials_v1",
-    "JetPakt Pulse Pro": "jetpakt_pulse_pro_v1",
-    "JetPakt Pulse Alert": "jetpakt_pulse_alert_v1",
-    "JetPakt Pulse Concierge": "jetpakt_pulse_concierge_v1"
-  },
-  "missing_lookup_keys": [
-    "jetpakt_scan_v1",
-    "jetpakt_pulse_essentials_v1",
-    "jetpakt_pulse_pro_v1",
-    "jetpakt_pulse_alert_v1",
-    "jetpakt_pulse_concierge_v1"
-  ],
   "dashboard_fixups_needed": [
     {
-      "product": "JetPakt Scan",
-      "issue": "Price is recurring/month — should be one-time.",
-      "fix": "Archive the current $49/mo price and create a new $49 one-time price on the same product. Set lookup_key to jetpakt_scan_v1."
-    },
-    {
-      "product": "All 5 products",
-      "issue": "No lookup_key set on any price — the Pulse billing gate needs these.",
-      "fix": "Open each price in Dashboard and set the Lookup key under Advanced options (values in name_to_lookup_key above)."
+      "status": "deferred",
+      "deferred_at": "2026-04-18",
+      "items": [
+        "Essentials: add lookup_key = jetpakt_pulse_essentials_v1",
+        "Pro: clear field, replace with jetpakt_pulse_pro_v1 (remove backticks)",
+        "Alert: clear field, replace with jetpakt_pulse_alert_v1 (remove backticks)",
+        "Concierge: add lookup_key = jetpakt_pulse_concierge_v1"
+      ],
+      "impact_if_ignored": "None — name-fallback in stripe_sync.py resolves all 5 products by name. Billing gate functional."
     }
   ]
 }

@@ -611,3 +611,124 @@ img { max-width: 100%; display: block; }
   outline-offset: 3px;
   border-radius: 3px;
 }
+
+/* ==========================================================================
+   Inquiry page + Netlify form
+   ========================================================================== */
+.section-inquiry { padding: 72px 0 96px; }
+.section-inquiry .eyebrow { color: var(--gold); }
+.section-inquiry .h1 { margin: 10px 0 18px; }
+.section-inquiry .body-lg { color: var(--text); max-width: 640px; }
+.section-inquiry .micro { max-width: 640px; margin-bottom: 28px; }
+
+.nav-cta-active,
+.site-nav .nav-cta.nav-cta-active {
+  background: var(--gold);
+  color: var(--gold-ink);
+  border-color: var(--gold);
+}
+
+.inquiry-form {
+  margin-top: 24px;
+  padding: 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.field { display: block; margin-bottom: 18px; }
+.field > label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+}
+.field input[type="text"],
+.field input[type="email"],
+.field input[type="tel"],
+.field input[type="url"],
+.field textarea {
+  width: 100%;
+  font-family: var(--ff-body);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 11px 14px;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--text-faint);
+  opacity: 1;
+}
+.field input:hover,
+.field textarea:hover {
+  border-color: var(--text-muted);
+}
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201, 168, 106, 0.22);
+  background: var(--surface-alt);
+}
+.field textarea { resize: vertical; min-height: 120px; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.field-row .field { margin-bottom: 18px; }
+@media (max-width: 640px) {
+  .field-row { grid-template-columns: 1fr; gap: 0; }
+}
+
+.field-checkbox {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 12px;
+  margin: 8px 0 22px;
+  padding: 14px 16px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.field-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  accent-color: var(--gold);
+  cursor: pointer;
+}
+.field-checkbox label {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.hint {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin: 6px 0 0;
+}
+
+.req { color: var(--gold); margin-left: 2px; }
+
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

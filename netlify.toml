@@ -28,3 +28,13 @@
   for = "*.html"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+
+# ------------------------------------------------------------------------------
+# Netlify Forms
+# The preview-inquiry form is auto-detected from inquiry.html via the
+# data-netlify="true" attribute. No TOML config is required for detection.
+#
+# Email notification to gojetpakt.us@outlook.com is configured in the Netlify
+# UI at: Project configuration > Notifications > Form submission notifications.
+# Event: "New form submission" -> Form: preview-inquiry -> Email: gojetpakt.us@outlook.com.
+# ------------------------------------------------------------------------------

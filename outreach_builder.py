@@ -40,8 +40,8 @@ from datetime import datetime
 # omitted per operator request.
 #
 # POSTAL_ADDRESS: Required by CAN-SPAM 16 CFR §316.5 for any commercial email.
-# Set this the moment the P.O. Box is active. Leaving it as a placeholder is
-# acceptable for drafts in review, but NOT for outbound sends.
+# Current address is an active CMRA mailbox in Parker, CO. Must remain a valid
+# physical postal address at all times for any outbound send.
 # ---------------------------------------------------------------------------
 POSTAL_ADDRESS = "6222 E Pine Lane, Suite 6212, Parker, CO 80138"
 

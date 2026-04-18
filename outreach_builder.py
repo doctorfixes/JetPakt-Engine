@@ -43,7 +43,7 @@ from datetime import datetime
 # Set this the moment the P.O. Box is active. Leaving it as a placeholder is
 # acceptable for drafts in review, but NOT for outbound sends.
 # ---------------------------------------------------------------------------
-POSTAL_ADDRESS = "PO Box pending  \u00b7  Denver, CO"  # TODO: replace once USPS box is issued
+POSTAL_ADDRESS = "6222 E Pine Lane, Suite 6212, Parker, CO 80138"
 
 RYAN_SIGNATURE = (
     "Ryan B., JetPakt Solutions\n"

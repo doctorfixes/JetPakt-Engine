@@ -40,4 +40,4 @@ Thanks for the minute.
 
 Ryan B., JetPakt Solutions
 gojetpakt.us@outlook.com  ·  gojetpakt.com
-PO Box pending  ·  Denver, CO
+6222 E Pine Lane, Suite 6212, Parker, CO 80138

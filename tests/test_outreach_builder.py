@@ -242,17 +242,21 @@ def test_build_draft_signature_has_identity_contact_and_postal_address():
 
     CAN-SPAM (16 CFR §316.5) requires a physical postal address on every
     commercial email. The postal address line is the third line of the
-    signature and must always be present, even when set to the pending
-    placeholder for drafts in review.
+    signature and must be non-empty and look like a real postal address
+    (contains a numeric component and a state abbreviation).
     """
+    import re
     d = build_draft(_example_row())
     sig_lines = d.body.rstrip().split("\n")[-3:]
     assert sig_lines[0] == "Ryan B., JetPakt Solutions"
     assert "gojetpakt.us@outlook.com" in sig_lines[1]
     assert "gojetpakt.com" in sig_lines[1]
-    # Third line = postal address. Either real PO Box or the pending placeholder.
-    assert sig_lines[2].strip() != ""
-    assert ("PO Box" in sig_lines[2]) or ("P.O. Box" in sig_lines[2])
+    # Third line = postal address. Must be non-empty, contain a digit
+    # (street number, PO box number, or ZIP), and a US state abbreviation.
+    postal = sig_lines[2].strip()
+    assert postal != ""
+    assert re.search(r"\d", postal), f"postal address must contain a number: {postal!r}"
+    assert re.search(r"\b[A-Z]{2}\b", postal), f"postal address must contain a state abbreviation: {postal!r}"
 
 
 def test_build_draft_body_includes_provenance_lead():

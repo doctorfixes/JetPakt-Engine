@@ -6,7 +6,7 @@
 - Rating at audit: 3.0
 - Review count: 312
 - Routing: ryan_drafts
-- Generated: 2026-04-18T19:24:41.175810Z
+- Generated: 2026-04-18T21:19:02.480784Z
 
 ---
 
@@ -42,4 +42,4 @@ Every finding I share is anchored to a verbatim public quote. I never name staff
 
 Ryan B., JetPakt Solutions
 gojetpakt.us@outlook.com  ·  gojetpakt.com
-PO Box pending  ·  Denver, CO
+6222 E Pine Lane, Suite 6212, Parker, CO 80138

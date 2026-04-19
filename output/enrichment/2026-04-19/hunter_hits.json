@@ -1,0 +1,47 @@
+[
+  {
+    "prospect_id": "denver_black_bird_public_house",
+    "email": "angiem@tabletotavern.com",
+    "first_name": "Angie",
+    "last_name": "",
+    "position": "Manager",
+    "confidence": 80,
+    "source_url": "https://www.opentable.com/r/blackbird-denver"
+  },
+  {
+    "prospect_id": "denver_blue_pan_pizza",
+    "email": "contact@bluepandenver.com",
+    "first_name": "Giles",
+    "last_name": "Flanagin",
+    "position": "Owner",
+    "confidence": 90,
+    "source_url": "https://www.reddit.com/r/denverfood/comments/1ji8wrg/blue_pan_food_truck_review/"
+  },
+  {
+    "prospect_id": "denver_bar_dough",
+    "email": "info@bardoughdenver.com",
+    "first_name": "",
+    "last_name": "",
+    "position": "Generic",
+    "confidence": 90,
+    "source_url": "https://www.bardoughdenver.com/location/bar-dough/"
+  },
+  {
+    "prospect_id": "denver_bar_dough",
+    "email": "lauren@theculinarycreative.com",
+    "first_name": "Lauren",
+    "last_name": "",
+    "position": "Manager",
+    "confidence": 90,
+    "source_url": "https://www.bardoughdenver.com/location/bar-dough/"
+  },
+  {
+    "prospect_id": "denver_bar_dough",
+    "email": "juan@theculinarycreative.com",
+    "first_name": "Juan",
+    "last_name": "Padro",
+    "position": "Owner",
+    "confidence": 75,
+    "source_url": "https://contactout.com/Juan-Padro-25994397"
+  }
+]

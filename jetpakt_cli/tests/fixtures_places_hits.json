@@ -1,0 +1,31 @@
+[
+  {
+    "prospect_id": "arvada_3_sons_italian",
+    "place_id": "ChIJplace_3sons",
+    "live_rating": 4.1,
+    "live_review_count": 746,
+    "live_website": "https://3sonsitalian.com",
+    "last_updated_iso": "2026-04-19T14:00:00Z"
+  },
+  {
+    "prospect_id": "arvada_school_house",
+    "place_id": "ChIJplace_schoolhouse",
+    "live_rating": 4.4,
+    "live_review_count": 4301,
+    "live_website": "https://schoolhousearvada.com",
+    "last_updated_iso": "2026-04-19T14:00:00Z"
+  },
+  {
+    "prospect_id": "lakewood_las_dalias_lakewood",
+    "place_id": "ChIJplace_lasdalias",
+    "live_rating": 4.2,
+    "live_review_count": 615,
+    "live_website": "https://lasdaliaslakewood.com",
+    "last_updated_iso": "2026-04-19T14:00:00Z"
+  },
+  {
+    "prospect_id": "orphan_prospect_id",
+    "live_rating": 4.5,
+    "live_review_count": 100
+  }
+]

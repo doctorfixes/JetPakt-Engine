@@ -15,6 +15,12 @@ cd /home/user/workspace/denver_leadgen
 
 ./jetpakt inbox-plan --prospects <prospects.json> [--out <path>] [--lookback-days 3]
 ./jetpakt inbox-apply --prospects <prospects.json> --hits <hits.json> [--out <path>]
+
+./jetpakt onboard --customer <stripe_customer.json> [--subscription <stripe_subscription.json>] \
+                  --prospects <prospects.json> [--out <onboarding_plan.json>]
+
+./jetpakt refresh-ratings --prospects <prospects_full.json> --hits <places_hits.json> [--out <path>]
+./jetpakt enrich-emails   --prospects <prospects_full.json> --hits <hunter_hits.json> [--all] [--out <path>]
 ```
 
 ## Mapping schema
@@ -112,3 +118,50 @@ Classification (in `inbox.py`) is deterministic:
 ### Suppression tab
 
 Unsubscribes append one row with `type=email` (single address suppressed); bounces append one row with `type=domain` (the whole domain is suppressed). Schema: `email_or_domain, type, reason, prospect_id, suppressed_at, source`.
+
+## Enrichment (reviews + emails)
+
+`refresh-ratings` and `enrich-emails` keep the Prospects roster current. They are deterministic and offline — the main agent fetches raw hits from the Places and Hunter connectors, normalizes them, then feeds the hit file into the CLI to produce a Sheet-apply plan.
+
+```
+prospects_full.json --> refresh-ratings --> refresh_plan.json (rating / review_count / website drift)
+prospects_full.json --> enrich-emails   --> enrich_plan.json  (owner_email + owner_name fills)
+```
+
+### Places hit schema (refresh-ratings input)
+
+```json
+[
+  {
+    "prospect_id": "arvada_3_sons_italian",
+    "rating": 4.1,
+    "review_count": 612,
+    "website": "https://3sonsitalian.com",
+    "place_id": "ChIJ..."
+  }
+]
+```
+
+Refresh thresholds (in `enrich.py`): rating drift >= 0.3 stars, review count drift >= 50 absolute OR 5% relative, OR website change. Hits below every threshold are skipped. Unmatched `prospect_id`s are reported separately under `unmatched_hits` for audit.
+
+### Hunter hit schema (enrich-emails input)
+
+```json
+[
+  {
+    "prospect_id": "lakewood_las_dalias_lakewood",
+    "email": "adrian@lasdaliaslakewood.com",
+    "first_name": "Adrian",
+    "last_name": "Vazquez",
+    "position": "Owner",
+    "confidence": 91,
+    "source_url": "https://lasdaliaslakewood.com/contact"
+  }
+]
+```
+
+Confidence floor is 70 by default. `--all` overrides the default behavior of skipping rows that already have an `owner_email`. For prospects with multiple passing hits, the CLI picks the highest-confidence one, with a positional tie-breaker on Owner > General Manager > Manager > anyone else.
+
+## Client onboarding (Stripe → Clients tab)
+
+`onboard` maps a Stripe customer (and optional subscription) to a deterministic `client_id`, resolves the matching Prospect row when possible, and emits a plan with a Clients-tab append row, an optional Prospects stage update to `Client`, and one welcome draft email. See `docs/ONBOARDING_PLAYBOOK.md` for SLA and idempotency rules. The hourly Stripe poll cron wraps this command so new subscriptions and one-time Scan purchases onboard themselves.

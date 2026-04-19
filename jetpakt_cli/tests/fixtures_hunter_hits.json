@@ -1,0 +1,32 @@
+[
+  {
+    "prospect_id": "lakewood_las_dalias_lakewood",
+    "domain": "lasdaliaslakewood.com",
+    "first_name": "Adrian",
+    "last_name": "Vazquez",
+    "position": "Owner",
+    "email": "adrian@lasdaliaslakewood.com",
+    "confidence": 91,
+    "source_url": "https://lasdaliaslakewood.com/contact"
+  },
+  {
+    "prospect_id": "denver_homegrown_tap_and_dough_arvada",
+    "domain": "gastamogroup.com",
+    "first_name": "Megan",
+    "last_name": "",
+    "position": "General Manager",
+    "email": "megan@gastamogroup.com",
+    "confidence": 82,
+    "source_url": "https://gastamogroup.com/team"
+  },
+  {
+    "prospect_id": "arvada_3_sons_italian",
+    "domain": "3sonsitalian.com",
+    "first_name": "",
+    "last_name": "",
+    "position": "",
+    "email": "speculative@3sonsitalian.com",
+    "confidence": 45,
+    "source_url": "https://example.com/source"
+  }
+]

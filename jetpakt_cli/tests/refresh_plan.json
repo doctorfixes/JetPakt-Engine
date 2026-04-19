@@ -1,0 +1,50 @@
+{
+  "generated_at": "2026-04-19T14:18:37+00:00",
+  "prospect_updates": [
+    {
+      "find": {
+        "column": "A",
+        "value": "arvada_3_sons_italian"
+      },
+      "set": {
+        "notes_append": "Refresh 2026-04-19T14:18:37+00:00: rating 3.3 -> 4.1",
+        "updated_at": "2026-04-19T14:18:37+00:00",
+        "rating": "4.1"
+      }
+    },
+    {
+      "find": {
+        "column": "A",
+        "value": "arvada_school_house"
+      },
+      "set": {
+        "notes_append": "Refresh 2026-04-19T14:18:37+00:00: rating 3.5 -> 4.4",
+        "updated_at": "2026-04-19T14:18:37+00:00",
+        "rating": "4.4"
+      }
+    },
+    {
+      "find": {
+        "column": "A",
+        "value": "lakewood_las_dalias_lakewood"
+      },
+      "set": {
+        "notes_append": "Refresh 2026-04-19T14:18:37+00:00: website updated",
+        "updated_at": "2026-04-19T14:18:37+00:00",
+        "website": "https://lasdaliaslakewood.com"
+      }
+    }
+  ],
+  "skipped": [],
+  "unmatched_hits": [
+    "orphan_prospect_id"
+  ],
+  "summary": {
+    "hits_checked": 4,
+    "updates": 3,
+    "skipped_no_drift": 0,
+    "unmatched": 1,
+    "rating_drift_min": 0.3,
+    "review_count_drift_min": 50
+  }
+}

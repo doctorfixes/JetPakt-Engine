@@ -1,0 +1,38 @@
+[
+  {
+    "prospect_id": "arvada_3_sons_italian",
+    "business_name": "3 Sons Italian",
+    "city": "Arvada", "state": "CO",
+    "rating": "3.3", "review_count": "724",
+    "website": "https://3sonsitalian.com",
+    "owner_name": "", "owner_email": "info@3sonsitalian.com",
+    "stage": "Drafted"
+  },
+  {
+    "prospect_id": "arvada_school_house",
+    "business_name": "School House Kitchen",
+    "city": "Arvada", "state": "CO",
+    "rating": "3.5", "review_count": "4259",
+    "website": "https://schoolhousearvada.com",
+    "owner_name": "Kay", "owner_email": "kay@schoolhousearvada.com",
+    "stage": "Drafted"
+  },
+  {
+    "prospect_id": "lakewood_las_dalias_lakewood",
+    "business_name": "Las Dalias",
+    "city": "Lakewood", "state": "CO",
+    "rating": "4.2", "review_count": "612",
+    "website": "",
+    "owner_name": "", "owner_email": "",
+    "stage": "Qualified"
+  },
+  {
+    "prospect_id": "denver_homegrown_tap_and_dough_arvada",
+    "business_name": "Homegrown Tap and Dough",
+    "city": "Arvada", "state": "CO",
+    "rating": "4.1", "review_count": "880",
+    "website": "",
+    "owner_name": "", "owner_email": "",
+    "stage": "Qualified"
+  }
+]

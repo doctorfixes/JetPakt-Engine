@@ -1,0 +1,46 @@
+{
+  "generated_at": "2026-04-19T14:21:01+00:00",
+  "prospect_updates": [
+    {
+      "find": {
+        "column": "A",
+        "value": "lakewood_las_dalias_lakewood"
+      },
+      "set": {
+        "owner_email": "adrian@lasdaliaslakewood.com",
+        "notes_append": "Enrich 2026-04-19T14:21:01+00:00: Hunter conf=91 adrian@lasdaliaslakewood.com (Owner)",
+        "updated_at": "2026-04-19T14:21:01+00:00",
+        "owner_name": "Adrian Vazquez"
+      },
+      "_source": {
+        "confidence": 91,
+        "source_url": "https://lasdaliaslakewood.com/contact"
+      }
+    },
+    {
+      "find": {
+        "column": "A",
+        "value": "denver_homegrown_tap_and_dough_arvada"
+      },
+      "set": {
+        "owner_email": "megan@gastamogroup.com",
+        "notes_append": "Enrich 2026-04-19T14:21:01+00:00: Hunter conf=82 megan@gastamogroup.com (General Manager)",
+        "updated_at": "2026-04-19T14:21:01+00:00",
+        "owner_name": "Megan"
+      },
+      "_source": {
+        "confidence": 82,
+        "source_url": "https://gastamogroup.com/team"
+      }
+    }
+  ],
+  "skipped": [],
+  "summary": {
+    "hunter_hits": 3,
+    "passing_confidence_floor": 2,
+    "updates": 2,
+    "skipped": 0,
+    "confidence_floor": 70,
+    "missing_only": true
+  }
+}

@@ -37,6 +37,9 @@ from .clients import (
     load_stripe_customer, load_stripe_subscription, load_prospects,
     build_onboarding_plan,
 )
+from .enrich import (
+    load_prospects_full, build_refresh_plan, build_enrich_plan,
+)
 
 
 def _run_py(script: Path, *args: str) -> int:
@@ -384,6 +387,65 @@ def cmd_onboard(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_refresh_ratings(args: argparse.Namespace) -> int:
+    """Diff stored ratings against live Places API hits."""
+    prospects_path = Path(args.prospects)
+    hits_path = Path(args.hits)
+    if not prospects_path.is_absolute():
+        prospects_path = cfg.REPO_ROOT / prospects_path
+    if not hits_path.is_absolute():
+        hits_path = cfg.REPO_ROOT / hits_path
+    for p in (prospects_path, hits_path):
+        if not p.exists():
+            print(f"ERROR: missing file: {p}")
+            return 2
+
+    prospects = load_prospects_full(prospects_path)
+    hits = json.loads(hits_path.read_text(encoding="utf-8"))
+    plan = build_refresh_plan(prospects, hits)
+
+    out_path = Path(args.out) if args.out else (hits_path.parent / "refresh_plan.json")
+    if not out_path.is_absolute():
+        out_path = cfg.REPO_ROOT / out_path
+    out_path.write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding="utf-8")
+    s = plan["summary"]
+    print(f"Refresh plan: hits={s['hits_checked']}, updates={s['updates']}, "
+          f"skipped_no_drift={s['skipped_no_drift']}, unmatched={s['unmatched']}")
+    print(f"  Thresholds: rating>={s['rating_drift_min']}, "
+          f"reviews>={s['review_count_drift_min']}")
+    print(f"  {out_path}")
+    return 0
+
+
+def cmd_enrich_emails(args: argparse.Namespace) -> int:
+    """Fill in missing owner_email from Hunter high-confidence hits."""
+    prospects_path = Path(args.prospects)
+    hits_path = Path(args.hits)
+    if not prospects_path.is_absolute():
+        prospects_path = cfg.REPO_ROOT / prospects_path
+    if not hits_path.is_absolute():
+        hits_path = cfg.REPO_ROOT / hits_path
+    for p in (prospects_path, hits_path):
+        if not p.exists():
+            print(f"ERROR: missing file: {p}")
+            return 2
+
+    prospects = load_prospects_full(prospects_path)
+    hits = json.loads(hits_path.read_text(encoding="utf-8"))
+    plan = build_enrich_plan(prospects, hits, missing_only=not args.all)
+
+    out_path = Path(args.out) if args.out else (hits_path.parent / "enrich_plan.json")
+    if not out_path.is_absolute():
+        out_path = cfg.REPO_ROOT / out_path
+    out_path.write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding="utf-8")
+    s = plan["summary"]
+    print(f"Enrich plan: hunter_hits={s['hunter_hits']}, passing_conf={s['passing_confidence_floor']}, "
+          f"updates={s['updates']}, skipped={s['skipped']}")
+    print(f"  Confidence floor: {s['confidence_floor']}, missing_only={s['missing_only']}")
+    print(f"  {out_path}")
+    return 0
+
+
 def cmd_status(_args: argparse.Namespace) -> int:
     # Minimal status: count drafts by wave directory.
     root = cfg.DRAFTS_DIR
@@ -498,6 +560,20 @@ def main() -> int:
     ob.add_argument("--prospects", required=True, help="Path to prospects.json")
     ob.add_argument("--out", default="")
     ob.set_defaults(func=cmd_onboard)
+
+    rr = sub.add_parser("refresh-ratings", help="Diff stored vs live ratings")
+    rr.add_argument("--prospects", required=True, help="Path to prospects_full.json (26-col)")
+    rr.add_argument("--hits", required=True, help="Path to places_hits.json")
+    rr.add_argument("--out", default="")
+    rr.set_defaults(func=cmd_refresh_ratings)
+
+    ee = sub.add_parser("enrich-emails", help="Fill owner_email from Hunter hits")
+    ee.add_argument("--prospects", required=True, help="Path to prospects_full.json (26-col)")
+    ee.add_argument("--hits", required=True, help="Path to hunter_hits.json")
+    ee.add_argument("--all", action="store_true",
+                    help="Also consider rows that already have an email (never overwrites)")
+    ee.add_argument("--out", default="")
+    ee.set_defaults(func=cmd_enrich_emails)
 
     full = sub.add_parser("full")
     full.add_argument("--source", default="")

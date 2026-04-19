@@ -1,0 +1,40 @@
+{
+  "generated_at": "2026-04-19T03:06:32Z",
+  "lookback_days": 3,
+  "prospect_count": 4,
+  "domain_count": 4,
+  "queries": [
+    {
+      "query": "from:@3sonsitalian.com",
+      "prospect_id": "arvada_3_sons_italian",
+      "business_name": "3 Sons Italian",
+      "domain": "3sonsitalian.com",
+      "kind": "reply_probe"
+    },
+    {
+      "query": "from:@schoolhousearvada.com",
+      "prospect_id": "arvada_school_house",
+      "business_name": "School House Kitchen",
+      "domain": "schoolhousearvada.com",
+      "kind": "reply_probe"
+    },
+    {
+      "query": "from:@gmail.com",
+      "prospect_id": "lakewood_las_dalias_lakewood",
+      "business_name": "Las Dalias",
+      "domain": "gmail.com",
+      "kind": "reply_probe"
+    },
+    {
+      "query": "from:@bardoughdenver.com",
+      "prospect_id": "denver_bar_dough",
+      "business_name": "Bar Dough",
+      "domain": "bardoughdenver.com",
+      "kind": "reply_probe"
+    },
+    {
+      "query": "from:postmaster OR from:mailer-daemon OR subject:undeliverable",
+      "kind": "bounce_probe"
+    }
+  ]
+}

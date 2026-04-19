@@ -1,0 +1,30 @@
+[
+  {
+    "prospect_id": "arvada_3_sons_italian",
+    "business_name": "3 Sons Italian",
+    "owner_email": "info@3sonsitalian.com",
+    "stage": "Drafted",
+    "legal_severity": ""
+  },
+  {
+    "prospect_id": "arvada_school_house",
+    "business_name": "School House Kitchen",
+    "owner_email": "kay@schoolhousearvada.com",
+    "stage": "Drafted",
+    "legal_severity": ""
+  },
+  {
+    "prospect_id": "lakewood_las_dalias_lakewood",
+    "business_name": "Las Dalias",
+    "owner_email": "adrianvazquez82@gmail.com",
+    "stage": "Qualified",
+    "legal_severity": ""
+  },
+  {
+    "prospect_id": "denver_bar_dough",
+    "business_name": "Bar Dough",
+    "owner_email": "info@bardoughdenver.com",
+    "stage": "Qualified",
+    "legal_severity": "HIGH"
+  }
+]

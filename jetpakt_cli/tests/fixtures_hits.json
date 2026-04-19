@@ -1,0 +1,47 @@
+[
+  {
+    "message_id": "msg_reply_positive_3sons",
+    "from_email": "info@3sonsitalian.com",
+    "from_name": "3 Sons Italian",
+    "subject": "Re: quick question on your service",
+    "received_at": "2026-04-18T14:22:00Z",
+    "body_preview": "Hi Ryan, yes interested — tell me more. Sounds good.",
+    "to_list": ["gojetpakt.us@outlook.com"]
+  },
+  {
+    "message_id": "msg_unsub_schoolhouse",
+    "from_email": "kay@schoolhousearvada.com",
+    "from_name": "Kay",
+    "subject": "Re: proposal",
+    "received_at": "2026-04-18T15:01:00Z",
+    "body_preview": "Please remove me from your list, not interested.",
+    "to_list": ["gojetpakt.us@outlook.com"]
+  },
+  {
+    "message_id": "msg_bounce_bardough",
+    "from_email": "postmaster@outlook.com",
+    "from_name": "Postmaster",
+    "subject": "Undeliverable: Quick question",
+    "received_at": "2026-04-18T12:10:00Z",
+    "body_preview": "Your message to info@bardoughdenver.com could not be delivered. The recipient address no longer exists.",
+    "to_list": ["gojetpakt.us@outlook.com"]
+  },
+  {
+    "message_id": "msg_noise_random",
+    "from_email": "newsletter@someunrelated.com",
+    "from_name": "Newsletter",
+    "subject": "Weekly digest",
+    "received_at": "2026-04-18T09:00:00Z",
+    "body_preview": "Check out our latest articles.",
+    "to_list": ["gojetpakt.us@outlook.com"]
+  },
+  {
+    "message_id": "msg_reply_neutral_las_dalias",
+    "from_email": "adrianvazquez82@gmail.com",
+    "from_name": "Adrian",
+    "subject": "Re: reviews",
+    "received_at": "2026-04-18T10:30:00Z",
+    "body_preview": "Got your note. Will think about it.",
+    "to_list": ["gojetpakt.us@outlook.com"]
+  }
+]

@@ -25,7 +25,26 @@ WORKSHEET_IDS = {
     "Outreach Log": 250333527,
     "Metrics": 1953076964,
     "Pipeline": 1925316065,
+    "Suppression": 1712783155,
 }
+
+# --- Inbox-scan defaults ----------------------------------------------------
+# Bounce signal phrases used by Microsoft Exchange / Outlook postmasters.
+BOUNCE_SUBJECT_TOKENS = (
+    "undeliverable", "undelivered", "delivery status notification",
+    "mail delivery failed", "returned mail", "delivery has failed",
+    "message not delivered",
+)
+BOUNCE_FROM_TOKENS = (
+    "mailer-daemon", "postmaster", "mail delivery subsystem",
+    "mailer_daemon", "no-reply-delivery",
+)
+# Phrases that indicate an opt-out / unsubscribe intent in the reply body.
+UNSUB_TOKENS = (
+    "unsubscribe", "take me off", "remove me", "stop emailing",
+    "do not email", "don't email me", "stop contacting",
+    "not interested", "please remove",
+)
 
 # --- Outreach policy --------------------------------------------------------
 TEMPLATE_VERSION = "v3-drift-personalized"

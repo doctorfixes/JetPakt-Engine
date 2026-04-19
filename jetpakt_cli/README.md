@@ -12,6 +12,9 @@ cd /home/user/workspace/denver_leadgen
 ./jetpakt stage-outlook <wave_dir> --mapping <mapping.json>   # -> outlook_plan.json
 ./jetpakt plan <wave_dir> --mapping <mapping.json>            # both plans
 ./jetpakt wave <wave_dir> --mapping <mapping.json>            # plan + apply summary
+
+./jetpakt inbox-plan --prospects <prospects.json> [--out <path>] [--lookback-days 3]
+./jetpakt inbox-apply --prospects <prospects.json> --hits <hits.json> [--out <path>]
 ```
 
 ## Mapping schema
@@ -37,6 +40,8 @@ One JSON object per wave, keyed by `business_name` (as it appears in `manifest.j
 
 - **`sync_plan.json`** — Prospect row updates + Outreach Log appends. Agent applies via `google_sheets__pipedream`.
 - **`outlook_plan.json`** — One `draft_email` action per draft (with `to`, `subject`, plain-text `body`, and `idempotency_key`). Agent applies via `outlook.draft_email`.
+- **`inbox_query_plan.json`** — List of Outlook `search_email` queries (one `from:@<domain>` per prospect + one generic bounce probe). Agent runs each query, normalizes hits into the `Hit` schema, and feeds the list to `inbox-apply`.
+- **`inbox_apply_plan.json`** — Sheet actions derived from classified hits: Prospects stage flips (`Replied` / `Disqualified`), Outreach Log inbound appends, and Suppression tab appends for bounces and unsubscribes.
 
 ### Idempotency
 
@@ -64,3 +69,46 @@ manifest.json --- mapping.json -->  outlook_plan.json --->  Outlook connector
 ```
 
 The CLI is pure Python with zero external dependencies. Plans are JSON so they can be diffed in git, inspected before apply, and re-applied idempotently.
+
+## Inbox scan (reply + bounce cron)
+
+`inbox-plan` and `inbox-apply` split the reply/bounce scan into two offline steps so the agent's only connector calls are the actual Outlook queries and Sheet writes.
+
+```
+prospects.json --> inbox-plan  --> inbox_query_plan.json
+                                       |
+                       agent runs outlook.search_email per query
+                                       v
+                                  hits.json (normalized)
+                                       |
+prospects.json + hits.json --> inbox-apply --> inbox_apply_plan.json
+                                       |
+                       agent applies via google_sheets connector
+```
+
+Classification (in `inbox.py`) is deterministic:
+
+- **bounce** — sender is `mailer-daemon`/`postmaster`, or subject contains `undeliverable`; prospect recovered by scanning body for a known domain.
+- **unsubscribe** — sender domain matches a prospect AND body contains an opt-out token (`remove me`, `unsubscribe`, `not interested`, ...).
+- **reply** — sender domain matches a prospect, no opt-out tokens. Sentiment is a crude keyword classifier (flag-for-review, not perfect).
+- **ignore** — sender does not match any prospect domain.
+
+### Hit schema (what the cron feeds to `inbox-apply`)
+
+```json
+[
+  {
+    "message_id": "...",
+    "from_email": "kay@schoolhousearvada.com",
+    "from_name": "Kay",
+    "subject": "Re: proposal",
+    "received_at": "2026-04-18T15:01:00Z",
+    "body_preview": "Please remove me from your list.",
+    "to_list": ["gojetpakt.us@outlook.com"]
+  }
+]
+```
+
+### Suppression tab
+
+Unsubscribes append one row with `type=email` (single address suppressed); bounces append one row with `type=domain` (the whole domain is suppressed). Schema: `email_or_domain, type, reason, prospect_id, suppressed_at, source`.

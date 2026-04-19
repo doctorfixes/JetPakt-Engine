@@ -29,6 +29,10 @@ from . import config as cfg
 from .smoke import check_directory, check_draft
 from .sync import draft_to_log_row, now_iso
 from .outlook import build_outlook_plan, write_outlook_plan
+from .inbox import (
+    Prospect, Hit, build_query_plan, classify_hit,
+    build_apply_plan, load_prospects_from_json, prospects_by_domain,
+)
 
 
 def _run_py(script: Path, *args: str) -> int:
@@ -258,6 +262,80 @@ def cmd_wave(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_inbox_plan(args: argparse.Namespace) -> int:
+    """Emit inbox_query_plan.json from a prospects JSON file.
+
+    The prospects JSON is a list of {prospect_id, business_name, owner_email,
+    stage, legal_severity} objects. The agent sources this from the Prospects
+    tab (or provides a test fixture).
+    """
+    prospects_path = Path(args.prospects)
+    if not prospects_path.is_absolute():
+        prospects_path = cfg.REPO_ROOT / prospects_path
+    if not prospects_path.exists():
+        print(f"ERROR: prospects JSON not found: {prospects_path}")
+        return 2
+    prospects = load_prospects_from_json(prospects_path)
+    plan = build_query_plan(prospects, lookback_days=args.lookback_days)
+    out_path = Path(args.out) if args.out else (prospects_path.parent / "inbox_query_plan.json")
+    if not out_path.is_absolute():
+        out_path = cfg.REPO_ROOT / out_path
+    out_path.write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"Wrote query plan: {len(plan['queries'])} query(ies), "
+          f"{plan['domain_count']} domain(s) across {plan['prospect_count']} prospect(s)")
+    print(f"  {out_path}")
+    return 0
+
+
+def cmd_inbox_apply(args: argparse.Namespace) -> int:
+    """Read a hits JSON (produced by the agent from search_email results),
+    classify each hit, and emit inbox_apply_plan.json with Sheet actions.
+    """
+    prospects_path = Path(args.prospects)
+    if not prospects_path.is_absolute():
+        prospects_path = cfg.REPO_ROOT / prospects_path
+    hits_path = Path(args.hits)
+    if not hits_path.is_absolute():
+        hits_path = cfg.REPO_ROOT / hits_path
+    if not prospects_path.exists():
+        print(f"ERROR: prospects JSON not found: {prospects_path}")
+        return 2
+    if not hits_path.exists():
+        print(f"ERROR: hits JSON not found: {hits_path}")
+        return 2
+
+    prospects = load_prospects_from_json(prospects_path)
+    by_domain = prospects_by_domain(prospects)
+
+    hits_raw = json.loads(hits_path.read_text(encoding="utf-8"))
+    classifications = []
+    for h in hits_raw:
+        hit = Hit(
+            message_id=h.get("message_id", ""),
+            from_email=h.get("from_email", ""),
+            from_name=h.get("from_name", ""),
+            subject=h.get("subject", ""),
+            received_at=h.get("received_at", ""),
+            body_preview=h.get("body_preview", ""),
+            to_list=h.get("to_list", []) or [],
+        )
+        classifications.append(classify_hit(hit, by_domain))
+
+    plan = build_apply_plan(classifications)
+    out_path = Path(args.out) if args.out else (hits_path.parent / "inbox_apply_plan.json")
+    if not out_path.is_absolute():
+        out_path = cfg.REPO_ROOT / out_path
+    out_path.write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding="utf-8")
+    s = plan["summary"]
+    print(f"Wrote apply plan: replies={s['replies']}, unsubscribes={s['unsubscribes']}, "
+          f"bounces={s['bounces']}, ignored={s['ignored']}")
+    print(f"  Prospect updates: {len(plan['prospect_updates'])}")
+    print(f"  Outreach Log appends: {len(plan['outreach_log_appends'])}")
+    print(f"  Suppression appends: {len(plan['suppression_appends'])}")
+    print(f"  {out_path}")
+    return 0
+
+
 def cmd_status(_args: argparse.Namespace) -> int:
     # Minimal status: count drafts by wave directory.
     root = cfg.DRAFTS_DIR
@@ -349,6 +427,21 @@ def main() -> int:
     wave.set_defaults(func=cmd_wave)
 
     sub.add_parser("status").set_defaults(func=cmd_status)
+
+    ibp = sub.add_parser("inbox-plan", help="Emit inbox_query_plan.json from prospects JSON")
+    ibp.add_argument("--prospects", required=True,
+                     help="Path to JSON list of prospect records")
+    ibp.add_argument("--out", default="",
+                     help="Output path (defaults to inbox_query_plan.json next to prospects)")
+    ibp.add_argument("--lookback-days", type=int, default=3)
+    ibp.set_defaults(func=cmd_inbox_plan)
+
+    iba = sub.add_parser("inbox-apply", help="Classify hits JSON + emit inbox_apply_plan.json")
+    iba.add_argument("--prospects", required=True)
+    iba.add_argument("--hits", required=True,
+                     help="Path to JSON list of normalized Outlook hits")
+    iba.add_argument("--out", default="")
+    iba.set_defaults(func=cmd_inbox_apply)
 
     full = sub.add_parser("full")
     full.add_argument("--source", default="")

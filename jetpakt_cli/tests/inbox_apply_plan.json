@@ -1,0 +1,181 @@
+{
+  "generated_at": "2026-04-19T03:06:35Z",
+  "sheet_id": "1L2NqIcZeG_SMqoL_L3YN_IlqiVkMWy4SyBsu2Sa07yI",
+  "sheet_url": "https://docs.google.com/spreadsheets/d/1L2NqIcZeG_SMqoL_L3YN_IlqiVkMWy4SyBsu2Sa07yI/edit",
+  "summary": {
+    "replies": 2,
+    "unsubscribes": 1,
+    "bounces": 1,
+    "ignored": 1
+  },
+  "prospect_updates": [
+    {
+      "spreadsheetId": "1L2NqIcZeG_SMqoL_L3YN_IlqiVkMWy4SyBsu2Sa07yI",
+      "worksheetId": 2139708364,
+      "find": {
+        "column": "A",
+        "value": "arvada_3_sons_italian"
+      },
+      "set": {
+        "stage": "Replied",
+        "updated_at": "2026-04-19T03:06:35Z",
+        "notes_append": "[2026-04-19] reply received from 3sonsitalian.com; sentiment=positive"
+      }
+    },
+    {
+      "spreadsheetId": "1L2NqIcZeG_SMqoL_L3YN_IlqiVkMWy4SyBsu2Sa07yI",
+      "worksheetId": 2139708364,
+      "find": {
+        "column": "A",
+        "value": "arvada_school_house"
+      },
+      "set": {
+        "stage": "Disqualified",
+        "updated_at": "2026-04-19T03:06:35Z",
+        "notes_append": "[2026-04-19] unsubscribe received from schoolhousearvada.com; sentiment=negative"
+      }
+    },
+    {
+      "spreadsheetId": "1L2NqIcZeG_SMqoL_L3YN_IlqiVkMWy4SyBsu2Sa07yI",
+      "worksheetId": 2139708364,
+      "find": {
+        "column": "A",
+        "value": "denver_bar_dough"
+      },
+      "set": {
+        "stage": "Disqualified",
+        "updated_at": "2026-04-19T03:06:35Z",
+        "notes_append": "[2026-04-19] bounce detected; suppressing domain bardoughdenver.com"
+      }
+    },
+    {
+      "spreadsheetId": "1L2NqIcZeG_SMqoL_L3YN_IlqiVkMWy4SyBsu2Sa07yI",
+      "worksheetId": 2139708364,
+      "find": {
+        "column": "A",
+        "value": "lakewood_las_dalias_lakewood"
+      },
+      "set": {
+        "stage": "Replied",
+        "updated_at": "2026-04-19T03:06:35Z",
+        "notes_append": "[2026-04-19] reply received from gmail.com; sentiment=neutral"
+      }
+    }
+  ],
+  "outreach_log_appends": [
+    {
+      "spreadsheetId": "1L2NqIcZeG_SMqoL_L3YN_IlqiVkMWy4SyBsu2Sa07yI",
+      "worksheetId": 250333527,
+      "row_object": {
+        "log_id": "log_2026-04-19_reply_arvada_3_sons_italia",
+        "prospect_id": "arvada_3_sons_italian",
+        "direction": "inbound",
+        "channel": "outlook",
+        "touch_type": "reply",
+        "template_version": "",
+        "subject": "Re: quick question on your service",
+        "body_excerpt": "Hi Ryan, yes interested — tell me more. Sounds good.",
+        "draft_file": "",
+        "pillar": "",
+        "case_id": "",
+        "sent_at": "",
+        "reply_received_at": "2026-04-18T14:22:00Z",
+        "reply_sentiment": "positive",
+        "result": "replied",
+        "created_at": "2026-04-19T03:06:35Z"
+      }
+    },
+    {
+      "spreadsheetId": "1L2NqIcZeG_SMqoL_L3YN_IlqiVkMWy4SyBsu2Sa07yI",
+      "worksheetId": 250333527,
+      "row_object": {
+        "log_id": "log_2026-04-19_reply_arvada_school_house",
+        "prospect_id": "arvada_school_house",
+        "direction": "inbound",
+        "channel": "outlook",
+        "touch_type": "unsubscribe",
+        "template_version": "",
+        "subject": "Re: proposal",
+        "body_excerpt": "Please remove me from your list, not interested.",
+        "draft_file": "",
+        "pillar": "",
+        "case_id": "",
+        "sent_at": "",
+        "reply_received_at": "2026-04-18T15:01:00Z",
+        "reply_sentiment": "negative",
+        "result": "unsubscribed",
+        "created_at": "2026-04-19T03:06:35Z"
+      }
+    },
+    {
+      "spreadsheetId": "1L2NqIcZeG_SMqoL_L3YN_IlqiVkMWy4SyBsu2Sa07yI",
+      "worksheetId": 250333527,
+      "row_object": {
+        "log_id": "log_2026-04-19_bounce_denver_bar_dough",
+        "prospect_id": "denver_bar_dough",
+        "direction": "inbound",
+        "channel": "outlook",
+        "touch_type": "bounce",
+        "template_version": "",
+        "subject": "Undeliverable: Quick question",
+        "body_excerpt": "Your message to info@bardoughdenver.com could not be delivered. The recipient address no longer exists.",
+        "draft_file": "",
+        "pillar": "",
+        "case_id": "",
+        "sent_at": "",
+        "reply_received_at": "2026-04-18T12:10:00Z",
+        "reply_sentiment": "",
+        "result": "bounced",
+        "created_at": "2026-04-19T03:06:35Z"
+      }
+    },
+    {
+      "spreadsheetId": "1L2NqIcZeG_SMqoL_L3YN_IlqiVkMWy4SyBsu2Sa07yI",
+      "worksheetId": 250333527,
+      "row_object": {
+        "log_id": "log_2026-04-19_reply_lakewood_las_dalias_",
+        "prospect_id": "lakewood_las_dalias_lakewood",
+        "direction": "inbound",
+        "channel": "outlook",
+        "touch_type": "reply",
+        "template_version": "",
+        "subject": "Re: reviews",
+        "body_excerpt": "Got your note. Will think about it.",
+        "draft_file": "",
+        "pillar": "",
+        "case_id": "",
+        "sent_at": "",
+        "reply_received_at": "2026-04-18T10:30:00Z",
+        "reply_sentiment": "neutral",
+        "result": "replied",
+        "created_at": "2026-04-19T03:06:35Z"
+      }
+    }
+  ],
+  "suppression_appends": [
+    {
+      "spreadsheetId": "1L2NqIcZeG_SMqoL_L3YN_IlqiVkMWy4SyBsu2Sa07yI",
+      "worksheetId": 1712783155,
+      "row_object": {
+        "email_or_domain": "kay@schoolhousearvada.com",
+        "type": "email",
+        "reason": "unsubscribe reply",
+        "prospect_id": "arvada_school_house",
+        "suppressed_at": "2026-04-19T03:06:35Z",
+        "source": "inbox_scan"
+      }
+    },
+    {
+      "spreadsheetId": "1L2NqIcZeG_SMqoL_L3YN_IlqiVkMWy4SyBsu2Sa07yI",
+      "worksheetId": 1712783155,
+      "row_object": {
+        "email_or_domain": "bardoughdenver.com",
+        "type": "domain",
+        "reason": "hard bounce",
+        "prospect_id": "denver_bar_dough",
+        "suppressed_at": "2026-04-19T03:06:35Z",
+        "source": "inbox_scan"
+      }
+    }
+  ]
+}

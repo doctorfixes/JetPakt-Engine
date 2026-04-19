@@ -27,6 +27,7 @@ class SmokeResult:
     body: str
     passes: List[str] = field(default_factory=list)
     failures: List[str] = field(default_factory=list)
+    legal_severity: str = ""  # populated when mapping is known
 
     @property
     def ok(self) -> bool:
@@ -45,10 +46,14 @@ def _split_draft(md_text: str) -> tuple[str, str]:
     return subject, body
 
 
-def check_draft(path: Path) -> SmokeResult:
+# Legal note required on LEGAL-HIGH drafts (service-charge / lawsuit context).
+LEGAL_NOTE_MARKERS = ("hb25 1090", "hb25-1090", "hb 25-1090", "service-charge disclosure")
+
+
+def check_draft(path: Path, legal_severity: str = "") -> SmokeResult:
     text = path.read_text(encoding="utf-8")
     subject, body = _split_draft(text)
-    result = SmokeResult(path=path, subject=subject, body=body)
+    result = SmokeResult(path=path, subject=subject, body=body, legal_severity=legal_severity)
 
     def gate(name: str, cond: bool) -> None:
         (result.passes if cond else result.failures).append(name)
@@ -71,8 +76,36 @@ def check_draft(path: Path) -> SmokeResult:
     gate("verbatim quote block present", '    "' in body)
     gate("no 'scrape' / 'crawl' language", "scrape" not in body_lower and "crawl" not in body_lower)
     gate("gojetpakt.com present", "gojetpakt.com" in body)
+
+    if (legal_severity or "").upper() == "HIGH":
+        has_note = any(m in body_lower for m in LEGAL_NOTE_MARKERS)
+        gate("LEGAL-HIGH: legal note present", has_note)
     return result
 
 
-def check_directory(dir_path: Path) -> List[SmokeResult]:
-    return [check_draft(p) for p in sorted(dir_path.glob("*.md"))]
+def check_directory(dir_path: Path, legal_map: dict | None = None) -> List[SmokeResult]:
+    """Smoke every .md draft in dir_path.
+
+    legal_map: optional dict {business_name or slug: legal_severity}. When a
+    draft matches by slug (file stem) or by business_name parsed from the
+    header, its gate set includes the LEGAL-HIGH note gate.
+    """
+    out = []
+    legal_map = legal_map or {}
+    for p in sorted(dir_path.glob("*.md")):
+        stem = p.stem
+        # Derive business_name from header line "# Outreach draft — <name>"
+        biz = ""
+        try:
+            first = p.read_text(encoding="utf-8").splitlines()[0]
+            if first.startswith("# Outreach draft"):
+                # Handle both em-dash and ASCII hyphen separators.
+                for sep in (" \u2014 ", " - "):
+                    if sep in first:
+                        biz = first.split(sep, 1)[1].strip()
+                        break
+        except Exception:
+            pass
+        severity = legal_map.get(biz) or legal_map.get(stem) or ""
+        out.append(check_draft(p, legal_severity=severity))
+    return out

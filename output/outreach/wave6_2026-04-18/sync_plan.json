@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-19T01:42:47Z",
+  "generated_at": "2026-04-19T03:00:56Z",
   "sheet_id": "1L2NqIcZeG_SMqoL_L3YN_IlqiVkMWy4SyBsu2Sa07yI",
   "sheet_url": "https://docs.google.com/spreadsheets/d/1L2NqIcZeG_SMqoL_L3YN_IlqiVkMWy4SyBsu2Sa07yI/edit",
   "worksheet_ids": {
@@ -20,9 +20,9 @@
       },
       "set": {
         "stage": "Drafted",
-        "stage_entered_at": "2026-04-19T01:42:47Z",
+        "stage_entered_at": "2026-04-19T03:00:56Z",
         "next_action_due": "2026-04-21",
-        "updated_at": "2026-04-19T01:42:47Z",
+        "updated_at": "2026-04-19T03:00:56Z",
         "notes_append": "Draft generated 2026-04-19 via wave6_expansion_2026-04-18; subject: A drift pattern in 3 Sons Italian reviews"
       }
     },
@@ -35,9 +35,9 @@
       },
       "set": {
         "stage": "Drafted",
-        "stage_entered_at": "2026-04-19T01:42:47Z",
+        "stage_entered_at": "2026-04-19T03:00:56Z",
         "next_action_due": "2026-04-21",
-        "updated_at": "2026-04-19T01:42:47Z",
+        "updated_at": "2026-04-19T03:00:56Z",
         "notes_append": "Draft generated 2026-04-19 via wave6_expansion_2026-04-18; subject: A pattern in School House reviews"
       }
     }
@@ -62,7 +62,7 @@
         "reply_received_at": "",
         "reply_sentiment": "",
         "result": "drafted",
-        "created_at": "2026-04-19T01:42:47Z"
+        "created_at": "2026-04-19T03:00:56Z"
       }
     },
     {
@@ -84,7 +84,7 @@
         "reply_received_at": "",
         "reply_sentiment": "",
         "result": "drafted",
-        "created_at": "2026-04-19T01:42:47Z"
+        "created_at": "2026-04-19T03:00:56Z"
       }
     }
   ]

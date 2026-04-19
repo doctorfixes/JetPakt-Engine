@@ -1,12 +1,15 @@
 """JetPakt single-command CLI.
 
 Commands:
-  jetpakt audit           Classify CRM rows into READY / DRAFTED / DISQUALIFIED.
-  jetpakt smoke DIR       Run hard-gate checks on every draft in DIR.
-  jetpakt draft           Generate drafts from a source JSON (outreach_builder).
-  jetpakt prep-sync DIR   Emit a sync plan (JSON) the main agent can apply.
-  jetpakt status          One-line status summary.
-  jetpakt full            audit, then list READY rows and print the next action.
+  jetpakt audit              Classify CRM rows into READY / DRAFTED / DISQUALIFIED.
+  jetpakt smoke DIR          Run hard-gate checks on every draft in DIR.
+  jetpakt draft              Generate drafts from a source JSON (outreach_builder).
+  jetpakt prep-sync DIR      Emit sync_plan.json (Sheet updates + Log appends).
+  jetpakt stage-outlook DIR  Emit outlook_plan.json (one Outlook action per draft).
+  jetpakt plan DIR           Run smoke + prep-sync + stage-outlook (all plans).
+  jetpakt wave DIR           Same as 'plan' then print a single-paste apply summary.
+  jetpakt status             Inventory of waves and which plans exist.
+  jetpakt full               audit + draft + smoke + prep-sync (one shot).
 
 The CLI deliberately does NOT call external APIs (Outlook, Sheets) — those
 are handled by the main agent via connectors, using the JSON artifacts this
@@ -20,11 +23,12 @@ import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List
+from typing import Dict, List
 
 from . import config as cfg
 from .smoke import check_directory, check_draft
 from .sync import draft_to_log_row, now_iso
+from .outlook import build_outlook_plan, write_outlook_plan
 
 
 def _run_py(script: Path, *args: str) -> int:
@@ -39,14 +43,39 @@ def cmd_audit(_args: argparse.Namespace) -> int:
     return _run_py(cfg.REPO_ROOT / "crm_audit.py")
 
 
+def _resolve_dir(directory: str) -> Path:
+    p = Path(directory)
+    if not p.is_absolute():
+        p = cfg.REPO_ROOT / p
+    return p
+
+
+def _load_mapping(path: str) -> Dict[str, dict]:
+    if not path:
+        return {}
+    p = Path(path)
+    if not p.is_absolute():
+        p = cfg.REPO_ROOT / p
+    return json.loads(p.read_text()) if p.exists() else {}
+
+
+def _legal_map(mapping: Dict[str, dict]) -> Dict[str, str]:
+    """Produce {business_name: legal_severity} from mapping for smoke gates."""
+    out = {}
+    for key, m in mapping.items():
+        sev = (m or {}).get("legal_severity", "") or (m or {}).get("legal_flag_severity", "")
+        if sev:
+            out[key] = sev
+    return out
+
+
 def cmd_smoke(args: argparse.Namespace) -> int:
-    dir_path = Path(args.directory)
-    if not dir_path.is_absolute():
-        dir_path = cfg.REPO_ROOT / dir_path
+    dir_path = _resolve_dir(args.directory)
     if not dir_path.exists():
         print(f"ERROR: directory not found: {dir_path}")
         return 2
-    results = check_directory(dir_path)
+    mapping = _load_mapping(getattr(args, "mapping", ""))
+    results = check_directory(dir_path, legal_map=_legal_map(mapping))
     if not results:
         print(f"No .md drafts in {dir_path}")
         return 0
@@ -54,7 +83,8 @@ def cmd_smoke(args: argparse.Namespace) -> int:
     failing = 0
     for r in results:
         status = "PASS" if r.ok else "FAIL"
-        print(f"[{status}] {r.path.name}  subject: {r.subject!r}  ({len(r.subject)}c)")
+        sev = f" [legal={r.legal_severity}]" if r.legal_severity else ""
+        print(f"[{status}] {r.path.name}  subject: {r.subject!r}  ({len(r.subject)}c){sev}")
         for f in r.failures:
             print(f"    FAIL: {f}")
             failing += 1
@@ -79,19 +109,16 @@ def cmd_prep_sync(args: argparse.Namespace) -> int:
     The plan lists (a) prospect stage updates, (b) outreach-log row appends.
     The main agent applies this by calling the connector with each payload.
     """
-    dir_path = Path(args.directory)
-    if not dir_path.is_absolute():
-        dir_path = cfg.REPO_ROOT / dir_path
+    dir_path = _resolve_dir(args.directory)
     manifest_path = dir_path / "manifest.json"
     if not manifest_path.exists():
         print(f"ERROR: manifest.json not found in {dir_path}")
         return 2
 
     manifest = json.loads(manifest_path.read_text())
-    mapping_path = Path(args.mapping) if args.mapping else None
-    mapping = json.loads(mapping_path.read_text()) if mapping_path and mapping_path.exists() else {}
+    mapping = _load_mapping(args.mapping)
 
-    results = check_directory(dir_path)
+    results = check_directory(dir_path, legal_map=_legal_map(mapping))
     fail = [r for r in results if not r.ok]
     if fail:
         print("Smoke-check failures block sync. Fix these first:")
@@ -166,6 +193,71 @@ def cmd_prep_sync(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_stage_outlook(args: argparse.Namespace) -> int:
+    """Build outlook_plan.json the main agent applies via outlook.draft_email."""
+    dir_path = _resolve_dir(args.directory)
+    manifest_path = dir_path / "manifest.json"
+    if not manifest_path.exists():
+        print(f"ERROR: manifest.json not found in {dir_path}")
+        return 2
+    manifest = json.loads(manifest_path.read_text())
+    mapping = _load_mapping(args.mapping)
+
+    # Gate drafts before staging.
+    results = check_directory(dir_path, legal_map=_legal_map(mapping))
+    fail = [r for r in results if not r.ok]
+    if fail and not args.force:
+        print("Smoke-check failures block Outlook staging. Fix these first or pass --force:")
+        for r in fail:
+            print(f"  {r.path.name}: {r.failures}")
+        return 1
+
+    plan = build_outlook_plan(dir_path, manifest, mapping)
+    out = write_outlook_plan(dir_path, plan)
+    s = plan["summary"]
+    print(
+        f"Wrote outlook plan: {s['total']} action(s) — draft_email={s['draft_email']}, "
+        f"skip_no_email={s['skip_no_email']}, skip_missing_file={s['skip_missing_file']}"
+    )
+    print(f"  {out}")
+    return 0
+
+
+def cmd_plan(args: argparse.Namespace) -> int:
+    """Emit every plan file a wave needs in one call: sync_plan + outlook_plan."""
+    rc = cmd_smoke(args)
+    if rc != 0:
+        return rc
+    rc = cmd_prep_sync(args)
+    if rc != 0:
+        return rc
+    return cmd_stage_outlook(args)
+
+
+def cmd_wave(args: argparse.Namespace) -> int:
+    """Run 'plan' and then print a copy-paste apply summary for the agent."""
+    rc = cmd_plan(args)
+    if rc != 0:
+        return rc
+    dir_path = _resolve_dir(args.directory)
+    sync = dir_path / "sync_plan.json"
+    outlook = dir_path / "outlook_plan.json"
+    print("\n=== WAVE READY TO APPLY ===")
+    print(f"Sheet: {cfg.SHEET_URL}")
+    if sync.exists():
+        d = json.loads(sync.read_text())
+        print(f"Sheet actions: {len(d['prospect_updates'])} Prospects update(s), "
+              f"{len(d['outreach_log_appends'])} Log append(s)")
+    if outlook.exists():
+        d = json.loads(outlook.read_text())
+        s = d["summary"]
+        print(f"Outlook actions: {s['draft_email']} draft_email, "
+              f"{s['skip_no_email']} skipped (no email), "
+              f"{s['skip_missing_file']} skipped (missing file)")
+    print("\nNext: agent reads both plan files and applies via connectors.")
+    return 0
+
+
 def cmd_status(_args: argparse.Namespace) -> int:
     # Minimal status: count drafts by wave directory.
     root = cfg.DRAFTS_DIR
@@ -178,9 +270,13 @@ def cmd_status(_args: argparse.Namespace) -> int:
     print(f"Drafts root: {root}")
     for w in waves:
         mds = list(w.glob("*.md"))
-        plan = w / "sync_plan.json"
-        plan_bit = f"  [sync_plan.json]" if plan.exists() else ""
-        print(f"  - {w.name}: {len(mds)} draft(s){plan_bit}")
+        tags = []
+        if (w / "sync_plan.json").exists():
+            tags.append("sync")
+        if (w / "outlook_plan.json").exists():
+            tags.append("outlook")
+        tag = f"  [{'+'.join(tags)}]" if tags else ""
+        print(f"  - {w.name}: {len(mds)} draft(s){tag}")
     return 0
 
 
@@ -219,6 +315,7 @@ def main() -> int:
 
     smoke = sub.add_parser("smoke")
     smoke.add_argument("directory")
+    smoke.add_argument("--mapping", default="")
     smoke.set_defaults(func=cmd_smoke)
 
     draft = sub.add_parser("draft")
@@ -232,6 +329,24 @@ def main() -> int:
     prep.add_argument("directory")
     prep.add_argument("--mapping", default="")
     prep.set_defaults(func=cmd_prep_sync)
+
+    stage = sub.add_parser("stage-outlook")
+    stage.add_argument("directory")
+    stage.add_argument("--mapping", default="")
+    stage.add_argument("--force", action="store_true", help="Skip smoke gates")
+    stage.set_defaults(func=cmd_stage_outlook)
+
+    plan = sub.add_parser("plan")
+    plan.add_argument("directory")
+    plan.add_argument("--mapping", default="")
+    plan.add_argument("--force", action="store_true")
+    plan.set_defaults(func=cmd_plan)
+
+    wave = sub.add_parser("wave")
+    wave.add_argument("directory")
+    wave.add_argument("--mapping", default="")
+    wave.add_argument("--force", action="store_true")
+    wave.set_defaults(func=cmd_wave)
 
     sub.add_parser("status").set_defaults(func=cmd_status)
 

@@ -1,3 +1,7 @@
+# JetPakt Signal Engine
+# This module processes guest sentiment and complaint signals
+# which feed into real-time operational alerts.
+
 """
 Denver Restaurant Reputation-Management Lead Pipeline
 ======================================================

@@ -3,23 +3,326 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JetPakt – Real-Time Restaurant Operations Alerts</title>
+  <title>JetPakt Solutions — Drift diagnosis for independent restaurants</title>
+  <meta name="description" content="JetPakt reads the public signals your restaurant leaks, names the drifting pillar, and hands you a one-page operator memo with a monthly revenue-recovery range and a 30/60/90 day plan." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ---- Design tokens (mirrors jetpakt-site brand guide 2026-04) ---- */
+    :root {
+      --bg:          #2A1810;
+      --bg-alt:      #1E140C;
+      --surface:     #3A2418;
+      --text:        #EAD9B8;
+      --text-muted:  #B99760;
+      --text-faint:  #8A7148;
+      --gold:        #C9A86A;
+      --gold-hi:     #D4B878;
+      --gold-ink:    #2A1810;
+      --border:      #5A3E28;
+      --border-soft: rgba(201,168,106,0.18);
+      --ff-display:  "Instrument Serif", Georgia, serif;
+      --ff-body:     "Inter", "Helvetica Neue", Arial, sans-serif;
+      --radius:      6px;
+      --radius-lg:   12px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--ff-body);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--gold); text-decoration: none; transition: color 160ms ease; }
+    a:hover { color: var(--gold-hi); }
+
+    /* ---- Layout ---- */
+    .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+    /* ---- Header ---- */
+    .site-header {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border-soft);
+      background: rgba(30,20,12,0.92);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; }
+    .brand {
+      font-family: var(--ff-display);
+      font-size: 24px;
+      color: var(--gold);
+      letter-spacing: 0.5px;
+    }
+    .brand-sub {
+      font-family: var(--ff-body);
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-left: 10px;
+    }
+    .nav-cta {
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      transition: background 160ms ease, color 160ms ease;
+    }
+    .nav-cta:hover { background: var(--gold); color: var(--gold-ink); }
+
+    /* ---- Hero ---- */
+    .hero {
+      padding: 88px 0 72px;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(201,168,106,0.07), transparent 60%),
+        radial-gradient(ellipse 70% 50% at 90% 30%, rgba(30,58,95,0.22), transparent 65%),
+        var(--bg);
+    }
+    .eyebrow {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2.4px;
+      color: var(--text-muted);
+      margin: 0 0 14px;
+    }
+    .display {
+      font-family: var(--ff-display);
+      font-size: clamp(40px, 6vw, 64px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin: 0 0 20px;
+    }
+    .display em { font-style: italic; color: var(--gold); }
+    .lede {
+      font-size: 18px;
+      color: var(--text);
+      line-height: 1.55;
+      max-width: 640px;
+      margin: 0 0 28px;
+    }
+    .cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; }
+    .btn {
+      display: inline-block;
+      padding: 14px 26px;
+      border-radius: var(--radius);
+      font-family: var(--ff-body);
+      font-size: 15px;
+      font-weight: 500;
+      border: 1px solid transparent;
+      transition: background 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: var(--gold);
+      color: var(--gold-ink);
+      border-color: var(--gold);
+      font-weight: 600;
+    }
+    .btn-primary:hover { background: var(--gold-hi); border-color: var(--gold-hi); color: var(--gold-ink); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+    .hero-proofs {
+      list-style: none;
+      padding: 0;
+      margin: 28px 0 0;
+      display: flex;
+      gap: 14px 28px;
+      flex-wrap: wrap;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .hero-proofs li { display: flex; align-items: center; gap: 8px; }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--gold);
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    /* ---- Example ---- */
+    .section {
+      padding: 72px 0;
+      border-top: 1px solid var(--border-soft);
+    }
+    .h2 {
+      font-family: var(--ff-display);
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin: 0 0 16px;
+    }
+    .example-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-top: 28px;
+    }
+    .example-source {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-faint);
+      margin: 0 0 14px;
+    }
+    .example-card blockquote {
+      font-family: var(--ff-display);
+      font-size: 18px;
+      font-style: italic;
+      color: var(--text);
+      border-left: 3px solid var(--gold);
+      margin: 0 0 20px;
+      padding: 4px 0 4px 18px;
+      line-height: 1.5;
+    }
+    .example-card dl { margin: 0; display: grid; grid-template-columns: repeat(2,1fr); gap: 10px 28px; }
+    .example-card dl div { display: flex; gap: 8px; align-items: baseline; }
+    .example-card dt { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-faint); white-space: nowrap; }
+    .example-card dd { font-size: 14px; color: var(--text-muted); margin: 0; }
+    @media (max-width: 540px) {
+      .example-card dl { grid-template-columns: 1fr; }
+    }
+
+    /* ---- CTA section ---- */
+    .section-cta { background: var(--bg-alt); }
+    .center { text-align: center; }
+    .narrow { max-width: 640px; margin-left: auto; margin-right: auto; }
+    .micro {
+      font-size: 12px;
+      color: var(--text-faint);
+      margin-top: 16px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ---- Footer ---- */
+    .site-footer {
+      padding: 36px 0 48px;
+      background: var(--bg-alt);
+      border-top: 1px solid var(--border);
+    }
+    .footer-brand {
+      font-family: var(--ff-display);
+      font-size: 18px;
+      color: var(--gold);
+      margin: 0 0 8px;
+    }
+    .footer-contact { font-size: 14px; color: var(--text-muted); margin: 0 0 12px; }
+    .footer-contact a { color: var(--gold); }
+    .footer-contact .sep { margin: 0 8px; color: var(--text-faint); }
+    .footer-meta {
+      font-size: 12.5px;
+      color: var(--text-faint);
+      line-height: 1.6;
+      margin: 0;
+      max-width: 760px;
+    }
+
+    /* ---- Accessibility ---- */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 0ms !important; scroll-behavior: auto !important; }
+    }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 3px; }
+  </style>
 </head>
 <body>
-  <h1>Fix bad shifts before they cost you</h1>
-  <p>
-    JetPakt connects sales, labor, and demand signals into real-time alerts.
-  </p>
-  <h2>Live Example</h2>
-  <pre>
-Lunch Shift – Urban Grill
-Sales: +22%
-Labor: 68%
-Ticket Time: Rising
-→ Call in staff immediately
-  </pre>
-  <p>
-    <a href="mailto:demo@jetpakt.com">Book Demo</a>
-  </p>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/">
+      JetPakt Solutions<span class="brand-sub">Advisory</span>
+    </a>
+    <a class="nav-cta" href="mailto:gojetpakt.us@outlook.com">Book a demo</a>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Drift diagnosis for independent restaurants</p>
+    <h1 class="display">
+      Fix bad shifts before<br>
+      <em>they cost you.</em>
+    </h1>
+    <p class="lede">
+      JetPakt reads the public signals your restaurant leaks — reviews, pacing patterns, peer benchmarks, fee language — and returns a one-page operator memo: which pillar is drifting, what it costs per month, and what you move in the next 90 days.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="mailto:gojetpakt.us@outlook.com">Book a demo</a>
+      <a class="btn btn-ghost" href="https://gojetpakt.com">See the full site</a>
+    </div>
+    <ul class="hero-proofs">
+      <li><span class="dot"></span> Five operating pillars: Production, Service, Sales, Operations, Management</li>
+      <li><span class="dot"></span> Monthly revenue-recovery range, source-cited</li>
+      <li><span class="dot"></span> Legal-review flags routed to your attorney</li>
+      <li><span class="dot"></span> Verbatim public sources only — drafts-only delivery</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <p class="eyebrow">What a finding looks like</p>
+    <h2 class="h2">Every signal is anchored to a verbatim public source.</h2>
+    <article class="example-card">
+      <p class="example-source">Google review · Feb 2026 · Lunch-service operator, anonymized</p>
+      <blockquote>
+        "Great food but we waited almost forty minutes between sitting down and the server taking our order. This is the third Saturday in a row."
+      </blockquote>
+      <dl>
+        <div><dt>Pillar</dt><dd>Service (case I06, table turns)</dd></div>
+        <div><dt>Severity</dt><dd>Operational-MED</dd></div>
+        <div><dt>Recovery</dt><dd>Est. $1,200–$2,800 per month</dd></div>
+        <div><dt>Response</dt><dd>Draft prepared; owner approval required</dd></div>
+      </dl>
+    </article>
+  </div>
+</section>
+
+<section class="section section-cta">
+  <div class="wrap narrow center">
+    <p class="eyebrow">Free preview</p>
+    <h2 class="h2">See which pillar is drifting before you commit.</h2>
+    <p class="lede narrow">
+      Share a few details and we'll send a free one-page preview drawn entirely from your public record within two business days. No sales call. No commitment.
+    </p>
+    <div class="cta-row" style="justify-content:center;">
+      <a class="btn btn-primary" href="mailto:gojetpakt.us@outlook.com">Email gojetpakt.us@outlook.com</a>
+    </div>
+    <p class="micro">Independent owner-operated restaurants, nationwide. Full site: <a href="https://gojetpakt.com">gojetpakt.com</a></p>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="footer-brand">JetPakt Solutions, LLC</p>
+    <p class="footer-contact">
+      <a href="mailto:gojetpakt.us@outlook.com">gojetpakt.us@outlook.com</a>
+      <span class="sep">&middot;</span>
+      <a href="https://gojetpakt.com" rel="noopener">gojetpakt.com</a>
+    </p>
+    <p class="footer-meta">&copy; 2026 JetPakt Solutions, LLC. All findings are drawn from verbatim public reviews and public records. Drafts-only delivery; human approval required before any response is sent. Not a law firm.</p>
+  </div>
+</footer>
+
 </body>
 </html>

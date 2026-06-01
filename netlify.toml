@@ -1,15 +1,15 @@
-# Netlify build config for JetPakt marketing site
-# The repo root contains the Python Pulse engine; the site is a static folder at jetpakt-site/.
+# Netlify build config for JetPakt — Bookkeeping Marketplace
+# Serves the marketing site from site/ as a static deploy.
+# API backend is deployed separately via Netlify Functions or external host.
 
 [build]
-  base    = "jetpakt-site"
+  base    = "site"
   publish = "."
 
 [build.environment]
-  # Static-only site — no build step needed. Netlify just publishes the folder.
   NETLIFY_USE_YARN = "false"
 
-# Security headers — reasonable defaults for a static marketing site
+# Security headers
 [[headers]]
   for = "/*"
   [headers.values]
@@ -18,7 +18,7 @@
     Referrer-Policy       = "strict-origin-when-cross-origin"
     Permissions-Policy    = "geolocation=(), microphone=(), camera=()"
 
-# Long cache for static assets, short cache for HTML
+# Long cache for CSS, short cache for HTML
 [[headers]]
   for = "*.css"
   [headers.values]
@@ -29,12 +29,8 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
-# ------------------------------------------------------------------------------
-# Netlify Forms
-# The preview-inquiry form is auto-detected from inquiry.html via the
-# data-netlify="true" attribute. No TOML config is required for detection.
-#
-# Email notification to gojetpakt.us@outlook.com is configured in the Netlify
-# UI at: Project configuration > Notifications > Form submission notifications.
-# Event: "New form submission" -> Form: preview-inquiry -> Email: gojetpakt.us@outlook.com.
-# ------------------------------------------------------------------------------
+# Redirects for the marketplace
+[[redirects]]
+  from = "/api/*"
+  to   = "https://jetpakt-api.gojetpakt.com/:splat"
+  status = 200

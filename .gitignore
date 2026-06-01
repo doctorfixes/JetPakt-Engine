@@ -1,41 +1,32 @@
 # Python
 __pycache__/
 *.py[cod]
-*$py.class
-*.so
-.Python
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
 *.egg-info/
 .venv/
 venv/
-
-# OS
-.DS_Store
-Thumbs.db
+env/
+*.whl
 
 # IDE
 .vscode/
 .idea/
 *.swp
+*.swo
+*~
 
-# Secrets — NEVER commit
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
 .env
 .env.*
-*.pem
-*.key
-secrets/
-credentials.json
+!.env.example
 
-# Local runtime artifacts (keep structure, skip mutable outputs)
-output/pulse/drafts/
-output/pulse/pulse_runs.jsonl
+# Project — keep site assets, ignore generated artifacts
+.netlify/
+dist/
+build/
 
-# Large generated PDFs can stay tracked; snapshots stay tracked too (they're the audit trail)
-
-# Stripe live catalog dumps (contain account_id; safe but prefer not in public-ish clones)
-# data/stripe_catalog.json  # kept in repo for now — no secrets
-
-# Local backups (not committed)
-*.bak.csv
+# JetPakt — docs contain business plans and specs (tracked separately)
+# docs/ is intentionally UN-ignored so it ships with the repo
